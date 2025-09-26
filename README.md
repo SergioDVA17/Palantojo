@@ -17,3 +17,6 @@ descripcion de las carpetas contenidas
 node_modules (los archivos de node,js)
 public(ahi se encuentra nuestras ventanas html.css,cada una en su propia carpeta)
 uploads (los archivos subidos por los usuarios (imagenes)
+
+
+LAS VALIDACIONES EN JAVASCRIPT,ACOMODAR MENSAJES EN FRONT CUESTION DE DISEÑO CSS; Reportes
