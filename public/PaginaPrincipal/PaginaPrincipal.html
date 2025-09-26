@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PalAntojo</title>
+  <link rel="icon" href="/Logo.png">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="PaginaPrincipal.css">
+</head>
+<body>
+  
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      
+      <div class="d-flex align-items-center">
+        <a href="/PaginaPrincipal/PaginaPrincipal.html" title="PalAntojo">
+          <img src="/Logo.png" alt="Logo" class="logo">
+        </a>
+        <div class="d-flex align-items-center user-info">
+          <a href="/Perfil/Perfil.html" title="Perfil de usuario">
+            <img id="fotoNavbar" src="/Imagenes/default.png" alt="Foto de perfil" class="logo">
+          </a>
+          <span class="username" id="nombreNavbar">@nombreUsuario</span>
+        </div>
+      </div>
+
+      <form class="form-inline search-bar">
+        <input class="form-control" type="search" placeholder="Buscar receta..." aria-label="Search">
+        <button class="btn btn-search" type="submit"><i class="bi bi-search"></i></button>
+      </form>
+
+      <a href="/CrearEditarPublicacion/CrearEditarPublicacion.html" class="btn-publish" title="Publicar receta">
+        <i class="bi bi-plus-circle-fill" id="publicar"></i>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Contenido principal -->
+  <main class="container mt-4">
+    <h4 class="titulo">Recetas mejor calificadas:</h4>
+
+    <div class="row justify-content-center">
+      
+      <!-- Tarjeta 1 -->
+      <div class="col-md-3 card-receta">
+        <img src="../Imagenes/Sopes.jpg" class="img-fluid rounded-top" alt="Platillo 1">
+        <div class="card-body text-center">
+          <h5 class="card-title">Sopes</h5>
+          <p class="card-text">Descripción</p>
+          <small>Publicada por <span id="autor1">[nombre de usuario]</span></small>
+          <hr>
+          <a href="/VerDetalles/VerDetalles.html" class="btn-detalles">Ver más detalles</a>
+        </div>
+      </div>
+
+      <!-- Tarjeta 2 -->
+      <div class="col-md-3 card-receta">
+        <img src="../Imagenes/Mole con arroz.jpg" class="img-fluid rounded-top" alt="Platillo 2">
+        <div class="card-body text-center">
+          <h5 class="card-title">Mole con arroz</h5>
+          <p class="card-text">Descripcion</p>
+          <small>Publicada por <span id="autor2">[nombre de usuario]</span></small>
+          <hr>
+          <a href="/VerDetalles/VerDetalles.html" class="btn-detalles">Ver más detalles</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <hr> 
+  <footer>
+      © 2025, PalAntojo
+  </footer>
+
+  <script>
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    if (!user) {
+      window.location.href = "/InicioSesion/InicioSesion.html";
+    } else {
+      document.getElementById("nombreNavbar").textContent = "@" + user.username;
+      document.getElementById("fotoNavbar").src = "/" + (user.fotoPerfil || "Imagenes/default.png");
+      document.getElementById("autor1").textContent = user.username;
+      document.getElementById("autor2").textContent = user.username;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/Logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PalAntojo - Perfil de usuario</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="Perfil.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <a href="/PaginaPrincipal/PaginaPrincipal.html" title="PalAntojo">
+          <img src="/Logo.png" alt="Logo" class="logo">
+        </a>
+        <div class="d-flex align-items-center user-info">
+          <a href="/Perfil/Perfil.html" title="Perfil de usuario">
+            <img id="fotoNavbar" src="/Imagenes/default.png" alt="Foto de perfil" class="logo">
+          </a>
+          <span class="username" id="nombreNavbar">@nombreUsuario</span>
+        </div>
+      </div>
+
+      <form class="form-inline search-bar">
+        <input class="form-control" type="search" placeholder="Buscar receta..." aria-label="Search">
+        <button class="btn btn-search" type="submit"><i class="bi bi-search"></i></button>
+      </form>
+
+      <a href="/CrearEditarPublicacion/CrearEditarPublicacion.html" class="btn-publish" title="Publicar receta">
+        <i class="bi bi-plus-circle-fill" id="publicar"></i>
+      </a>
+    </div>
+  </nav>
+  
+  <main class="container mt-4">
+    <div class="row">
+      <div class="col-md-4 text-center perfil-card">
+        <img id="fotoPerfil" src="/Imagenes/default.png" alt="Foto de perfil" class="foto-de-perfil">
+        <h4 id="nombreCompleto">Nombre completo</h4>
+        <p id="nombreUsuario">@nombreUsuario</p>
+        <p id="correoUsuario">correo@ejemplo.com</p>
+        <a href="/EditarPerfil/EditarPerfil.html" class="btn-editar">Editar perfil</a>
+      </div>
+
+      <div class="col-md-8"> 
+        <h3 class="titulo-seccion">MIS RECETAS</h3>
+        <hr>
+        <div class="row p-3 mb-3">
+          <div class="col-md-5 card-receta">
+            <img src="../Imagenes/Sopes.jpg" class="img-fluid rounded-top" alt="Platillo 1">
+            <div class="card-body text-center">
+              <h5 class="card-title">Sopes</h5>
+              <p class="card-text">Descripción</p>
+              <hr>
+              <div class="d-flex justify-content-center">
+                <a href="/CrearEditarPublicacion/CrearEditarPublicacion.html" class="btn-editarReceta">Editar</a>
+                <button class="btn-eliminar">Eliminar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © 2025, PalAntojo
+  </footer>
+
+  <script>
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    if (!user) {
+      window.location.href = "/InicioSesion/InicioSesion.html";
+    } else {
+      // Navbar
+      document.getElementById("nombreNavbar").textContent = user.username ? "@" + user.username : "@nombreUsuario";
+      document.getElementById("fotoNavbar").src = user.fotoPerfil || "/Imagenes/default.png";
+
+      // Perfil principal
+      document.getElementById("fotoPerfil").src = user.fotoPerfil || "/Imagenes/default.png";
+      const nombreCompleto = ((user.nombres || "") + " " + (user.apellidos || "")).trim();
+      document.getElementById("nombreCompleto").textContent = nombreCompleto || "Nombre completo";
+      document.getElementById("nombreUsuario").textContent = user.username ? "@" + user.username : "@nombreUsuario";
+      document.getElementById("correoUsuario").textContent = user.correo || "correo@ejemplo.com";
+    }
+  </script>
+</body>
+</html>

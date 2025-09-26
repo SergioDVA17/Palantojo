@@ -1,0 +1,139 @@
+body {
+  background-color: #dbe2bb;
+  font-family: Arial, sans-serif;
+}
+
+/* Navbar */
+.navbar-custom {
+  background-color: #da2627; 
+  padding: 10px 20px;
+}
+
+.logo {
+  width: 60px;
+  margin-right: 15px;
+}
+
+.user-info {
+  color: white;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.user-icon {
+  font-size: 30px;
+  margin-right: 5px;
+}
+
+.username {
+  font-weight: bold;
+}
+
+/* Barra de búsqueda */
+.search-bar input {
+  border-radius: 20px;
+  padding: 5px 15px;
+  border: none;
+}
+
+.btn-search {
+  background: none;
+  border: none;
+  color: black;
+  margin-left: -23px;
+}
+
+/* Botón publicar */
+.btn-publish, i {
+  color: white;
+  font-size: 28px;
+  margin-left: 15px;
+}
+
+#publicar:hover, .btn-search:hover{
+  font-weight: bold;
+  color: #dbe2bb; /*#6a714a;*/
+  /*color:rgb(211, 189, 189);*/
+}
+
+.receta-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+   border: 2px solid #da2627; 
+}
+
+.receta-info {
+  display: flex;
+  gap: 20px;
+}
+
+.receta-img {
+  width: 400px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.receta-detalles {
+  flex: 1;
+}
+
+.btn-guardar-receta {
+  background-color: #da2627;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-left: 490px;
+}
+
+.btn-guardar-receta:hover {
+  background-color: #a71d2a;
+}
+
+.opinion-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+ border: 2px solid #da2627; 
+}
+
+.stars {
+  font-size: 22px;
+  color: gold;
+}
+
+.btn-comentar {
+  background-color: #da2627;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  margin-top: 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  margin-left: 960px;
+}
+
+.btn-comentar:hover {
+  background-color: #a71d2a;
+}
+
+.comentario {
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+footer {
+    margin-top: 50px;
+    text-align: center;
+    justify-content: center;
+    color: #2e0a0a;
+    font-size: 10px;
+}

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/Logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PalAntojo - Editar perfil</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="EditarPerfil.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <a href="/PaginaPrincipal/PaginaPrincipal.html" title="PalAntojo">
+          <img src="/Logo.png" alt="Logo" class="logo">
+        </a>
+        <div class="d-flex align-items-center user-info">
+          <a href="/Perfil/Perfil.html" title="Perfil de usuario">
+            <img id="fotoNavbar" src="/Imagenes/default.png" alt="Foto de perfil" class="logo">
+          </a>
+          <span class="username" id="nombreNavbar">@nombreUsuario</span>
+        </div>
+      </div>
+      <form class="form-inline search-bar">
+        <input class="form-control" type="search" placeholder="Buscar receta..." aria-label="Search">
+        <button class="btn btn-search" type="submit"><i class="bi bi-search"></i></button>
+      </form>
+      <a href="/CrearEditarPublicacion/CrearEditarPublicacion.html" class="btn-publish" title="Publicar receta">
+        <i class="bi bi-plus-circle-fill" id="publicar"></i>
+      </a>
+    </div>
+  </nav>
+
+  <main class="container mt-4">
+    <div class="perfil-card">
+      <img id="fotoPerfil" src="/Imagenes/default.png" alt="Foto de perfil" class="foto-de-perfil">
+      <hr>
+      <div class="form-group">
+        <input type="file" name="profile_image" id="profile_image" accept="image/*">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" id="name" placeholder="Nombre(s)">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" id="apellido" placeholder="Apellido(s)">
+      </div>
+      <div class="form-group">
+        <input type="email" class="form-control" id="email" placeholder="Correo electrónico">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" id="username" minlength="3" placeholder="Nombre de usuario">
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" id="password" placeholder="Contraseña">
+      </div>
+      <button id="btnGuardar" class="btn-guardar">Guardar cambios</button>
+      <a href="/Perfil/Perfil.html" class="btn-cancelar">Cancelar</a>
+    </div>
+  </main>
+
+  <footer>
+    © 2025, PalAntojo
+  </footer>
+
+  <script>
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    if (!user) {
+      window.location.href = "/InicioSesion/InicioSesion.html";
+    } else {
+      // Mostrar foto de perfil en Navbar y en formulario
+      document.getElementById("nombreNavbar").textContent = "@" + (user.username || "nombreUsuario");
+      document.getElementById("fotoNavbar").src = user.fotoPerfil || "/Imagenes/default.png";
+      document.getElementById("fotoPerfil").src = user.fotoPerfil || "/Imagenes/default.png";
+      document.getElementById("name").value = user.nombres || "";
+      document.getElementById("apellido").value = user.apellidos || "";
+      document.getElementById("email").value = user.correo || "";
+      document.getElementById("username").value = user.username || "";
+    }
+
+    // Manejo del botón de guardar cambios (aunque de momento puede fallar el update)
+    document.getElementById("btnGuardar").addEventListener("click", async (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+      formData.append("id", user.id);
+      formData.append("nombres", document.getElementById("name").value);
+      formData.append("apellidos", document.getElementById("apellido").value);
+      formData.append("correo", document.getElementById("email").value);
+      formData.append("username", document.getElementById("username").value);
+      if (document.getElementById("password").value) {
+        formData.append("password", document.getElementById("password").value);
+      }
+      if (document.getElementById("profile_image").files.length > 0) {
+        formData.append("profile_image", document.getElementById("profile_image").files[0]);
+      }
+
+      try {
+        const res = await fetch("/update-profile", {
+          method: "POST",
+          body: formData
+        });
+
+        const text = await res.text();
+        try {
+          const data = JSON.parse(text);
+          alert(data.message);
+          if (data.success) {
+            user.nombres = document.getElementById("name").value;
+            user.apellidos = document.getElementById("apellido").value;
+            user.correo = document.getElementById("email").value;
+            user.username = document.getElementById("username").value;
+            if (data.newFotoPerfil) user.fotoPerfil = data.newFotoPerfil;
+            sessionStorage.setItem("user", JSON.stringify(user));
+            window.location.href = "/Perfil/Perfil.html";
+          }
+        } catch(err) {
+          console.error("Respuesta del servidor no es JSON:", text);
+          alert("Hubo un problema con la respuesta del servidor");
+        }
+      } catch (err) {
+        alert("Hubo un problema con la conexión al servidor");
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
