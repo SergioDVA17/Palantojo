@@ -3,16 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Registro - PalAntojo</title>
+  <title>Registro / PalAntojo</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="Registro.css">
+  <link rel="icon" type="image/x-icon" href="/public/Logo.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
+  <h1><a href="../InicioSesion/InicioSesion.html">PalAntojo</a></h1>
+  
   <div class="container">
-    <h1>PalAntojo</h1>
 
-    <!-- contenedor para mensajes -->
+    <!-- Contenedor para mensajes -->
     <div id="alertContainer"></div>
 
     <form id="registroForm" class="border p-4" enctype="multipart/form-data">
@@ -39,11 +41,23 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary">Crear cuenta</button>
-    </form>
+      <button type="submit" class="btn-registro">Crear cuenta</button>
+    
+      <div class="login">
+       <p>¿Ya tienes cuenta? <a href="../InicioSesion/InicioSesion.html">Iniciar sesión  <i class="bi bi-arrow-right-short"></i></a></p>
+      </div>
 
-    <p>¿Ya tienes cuenta? <a href="../InicioSesion/InicioSesion.html">Iniciar sesión</a></p>
+    </form>
+    <div class="imagen">
+            <a href="Registro.html">
+                <img src="../Logo.png" alt="Logo">
+            </a>
+    </div>
   </div>
+
+  <footer>
+        © 2025, PalAntojo
+  </footer>
 
   <script>
     const registroForm = document.getElementById('registroForm');
