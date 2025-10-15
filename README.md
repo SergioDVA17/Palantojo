@@ -1,4 +1,4 @@
-# Programación We 2 - PalAntojo
+# Programación Web 2 - PalAntojo
 **Integrantes del equipo:**  
 ★ Alvarado Garza Alberto Jesús   1847862  
 ★ Garcia Vera Ana Sared          1845639  
