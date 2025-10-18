@@ -147,3 +147,30 @@ footer {
     background-color: #be3f36;
     color: white;
 }
+
+.alert .close {
+  padding: 0.25rem 0.5rem;
+  font-size: 1.5rem;
+  line-height: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.alert-dismissible {
+  position: relative;
+}
+
+.alert-dismissible .close {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 8rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 1.5rem;
+  line-height: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
