@@ -11,7 +11,7 @@
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container-fluid d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center">
@@ -25,16 +25,24 @@
           <span class="username" id="nombreNavbar">@nombreUsuario</span>
         </div>
       </div>
+
       <form class="form-inline search-bar">
         <input class="form-control" type="search" placeholder="Buscar receta..." aria-label="Search">
-        <button class="btn btn-search" type="submit"><i class="bi bi-search"></i></button>
+        <button class="btn btn-search" type="submit"><i class="bi bi-search" id="buscar"></i></button>
       </form>
-      <a href="/CrearEditarPublicacion/CrearEditarPublicacion.html" class="btn-publish" title="Publicar receta">
-        <i class="bi bi-plus-circle-fill" id="publicar"></i>
-      </a>
+
+      <div class="d-flex align-items-center icon-group">
+        <a href="/CrearEditarPublicacion/CrearEditarPublicacion.html" class="btn-publish" title="Publicar receta">
+          <i class="bi bi-plus-circle-fill" id="publicar"></i>
+        </a>
+
+        <a href="/InicioSesion/InicioSesion.html" class="btn-logout" title="Cerrar sesión">
+          <i class="bi bi-box-arrow-right" id="logout"></i>
+        </a>
+      </div>
     </div>
   </nav>
-
+  
   <main class="container mt-4">
     <div class="perfil-card">
       <img id="fotoPerfil" src="/Imagenes/default.png" alt="Foto de perfil" class="foto-de-perfil">

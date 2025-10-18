@@ -48,6 +48,8 @@ body {
 
 #fotoNavbar {
   border-radius: 50%;
+  width: 70px;
+  height: 70px;
 }
 
 .username {
@@ -67,15 +69,35 @@ body {
   margin-left: -23px;
 }
 
-.btn-publish, i {
+#publicar, #buscar {
   color: white;
   font-size: 28px;
   margin-left: 15px;
 }
 
-#publicar:hover, .btn-search:hover{
+.btn-logout {
+  color: white;
+  font-size: 28px;
+}
+
+#publicar:hover, #buscar:hover {
   font-weight: bold;
   color: #dbe2bb; 
+}
+
+.btn-logout:hover{
+  font-weight: bold;
+  color: #161616; 
+}
+
+.icon-group a {
+  color: white;
+  font-size: 28px;
+  margin-left: 5px; 
+}
+
+.icon-group a:last-child {
+  margin-left: 10px; 
 }
 
 .btn-guardar {

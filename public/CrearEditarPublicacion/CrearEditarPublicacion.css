@@ -26,6 +26,8 @@ body {
 
 #fotoNavbar {
   border-radius: 50%;
+  width: 70px;
+  height: 70px;
 }
 
 .username {
@@ -45,15 +47,35 @@ body {
   margin-left: -23px;
 }
 
-.btn-publish, i {
+#publicar, #buscar {
   color: white;
   font-size: 28px;
   margin-left: 15px;
 }
 
-#publicar:hover, .btn-search:hover{
+.btn-logout {
+  color: white;
+  font-size: 28px;
+}
+
+#publicar:hover, #buscar:hover {
   font-weight: bold;
-  color: #dbe2bb;
+  color: #dbe2bb; 
+}
+
+.btn-logout:hover{
+  font-weight: bold;
+  color: #161616; 
+}
+
+.icon-group a {
+  color: white;
+  font-size: 28px;
+  margin-left: 5px; 
+}
+
+.icon-group a:last-child {
+  margin-left: 10px; 
 }
 
 .main-container {
@@ -75,7 +97,7 @@ body {
 .image-upload {
   border: 2px dashed #da2627;
   border-radius: 10px;
-  padding: 30px;
+  padding: 25px;
   text-align: center;
   cursor: pointer;
   margin-bottom: 20px;
@@ -83,11 +105,11 @@ body {
 }
 
 .image-upload:hover {
-  background-color: #f8f8f8;
+  background-color: #e3e3e3;
 }
 
 .upload-icon {
-  font-size: 50px;
+  font-size: 20px;
   color: #da2627;
   margin-bottom: 10px;
 }
@@ -95,8 +117,7 @@ body {
 .form-control {
   border-radius: 10px;
   border: 1px solid #da2627;
-  padding: 12px 15px;
-  margin-bottom: 20px;
+  padding: 10px 15px;
 }
 
 .form-control:focus {
