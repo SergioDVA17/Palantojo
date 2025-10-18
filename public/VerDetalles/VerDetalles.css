@@ -3,7 +3,6 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* Navbar */
 .navbar-custom {
   background-color: #da2627; 
   padding: 10px 20px;
@@ -25,11 +24,14 @@ body {
   margin-right: 5px;
 }
 
+#fotoNavbar {
+  border-radius: 50%;
+}
+
 .username {
   font-weight: bold;
 }
 
-/* Barra de búsqueda */
 .search-bar input {
   border-radius: 20px;
   padding: 5px 15px;
@@ -43,17 +45,35 @@ body {
   margin-left: -23px;
 }
 
-/* Botón publicar */
-.btn-publish, i {
+#publicar, #buscar {
   color: white;
   font-size: 28px;
   margin-left: 15px;
 }
 
-#publicar:hover, .btn-search:hover{
+.btn-logout {
+  color: white;
+  font-size: 28px;
+}
+
+#publicar:hover, #buscar:hover {
   font-weight: bold;
-  color: #dbe2bb; /*#6a714a;*/
-  /*color:rgb(211, 189, 189);*/
+  color: #dbe2bb; 
+}
+
+.btn-logout:hover{
+  font-weight: bold;
+  color: #161616; 
+}
+
+.icon-group a {
+  color: white;
+  font-size: 28px;
+  margin-left: 5px; 
+}
+
+.icon-group a:last-child {
+  margin-left: 10px; 
 }
 
 .receta-card {

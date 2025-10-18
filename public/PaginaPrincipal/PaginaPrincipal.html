@@ -44,7 +44,6 @@
 
     <div class="row justify-content-center">
       
-      <!-- Tarjeta 1 -->
       <div class="col-md-3 card-receta">
         <img src="../Imagenes/Sopes.jpg" class="img-fluid rounded-top" alt="Platillo 1">
         <div class="card-body text-center">
@@ -56,7 +55,6 @@
         </div>
       </div>
 
-      <!-- Tarjeta 2 -->
       <div class="col-md-3 card-receta">
         <img src="../Imagenes/Mole con arroz.jpg" class="img-fluid rounded-top" alt="Platillo 2">
         <div class="card-body text-center">
@@ -82,9 +80,7 @@
       window.location.href = "/InicioSesion/InicioSesion.html";
     } else {
       document.getElementById("nombreNavbar").textContent = "@" + user.username;
-      document.getElementById("fotoNavbar").src = "/" + (user.fotoPerfil || "Imagenes/default.png");
-      document.getElementById("autor1").textContent = user.username;
-      document.getElementById("autor2").textContent = user.username;
+            document.getElementById("fotoNavbar").src = user.fotoPerfil || "/Imagenes/default.png";
     }
   </script>
 </body>

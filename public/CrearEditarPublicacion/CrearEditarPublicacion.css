@@ -3,7 +3,6 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* Navbar */
 .navbar-custom {
   background-color: #da2627; 
   padding: 10px 20px;
@@ -25,11 +24,14 @@ body {
   margin-right: 5px;
 }
 
+#fotoNavbar {
+  border-radius: 50%;
+}
+
 .username {
   font-weight: bold;
 }
 
-/* Barra de búsqueda - CORREGIDA */
 .search-bar input {
   border-radius: 20px;
   padding: 5px 15px;
@@ -43,7 +45,6 @@ body {
   margin-left: -23px;
 }
 
-/* Botón publicar */
 .btn-publish, i {
   color: white;
   font-size: 28px;
@@ -55,7 +56,6 @@ body {
   color: #dbe2bb;
 }
 
-/* Contenedor principal */
 .main-container {
   background-color: white;
   border-radius: 15px;
@@ -72,7 +72,6 @@ body {
   margin-bottom: 15px;
 }
 
-/* Estilos para el área de subir imagen */
 .image-upload {
   border: 2px dashed #da2627;
   border-radius: 10px;
@@ -93,7 +92,6 @@ body {
   margin-bottom: 10px;
 }
 
-/* Campos de formulario */
 .form-control {
   border-radius: 10px;
   border: 1px solid #da2627;
@@ -111,7 +109,6 @@ textarea.form-control {
   resize: vertical;
 }
 
-/* Botones - ACTUALIZADOS según VerDetalles */
 .btn-action {
   border-radius: 20px;
   padding: 8px 15px;

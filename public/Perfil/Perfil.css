@@ -12,7 +12,6 @@ body {
   box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
 }
 
-/* Navbar */
 .navbar-custom {
   background-color: #da2627; 
   padding: 10px 20px;
@@ -34,11 +33,14 @@ body {
   margin-right: 5px;
 }
 
+#fotoNavbar {
+  border-radius: 50%;
+}
+
 .username {
   font-weight: bold;
 }
 
-/* Barra de búsqueda */
 .search-bar input {
   border-radius: 20px;
   padding: 5px 15px;
@@ -52,17 +54,35 @@ body {
   margin-left: -23px;
 }
 
-/* Botón publicar */
-.btn-publish, i {
+#publicar, #buscar {
   color: white;
   font-size: 28px;
   margin-left: 15px;
 }
 
-#publicar:hover, .btn-search:hover{
+.btn-logout {
+  color: white;
+  font-size: 28px;
+}
+
+#publicar:hover, #buscar:hover {
   font-weight: bold;
-  color: #dbe2bb; /*#6a714a;*/
-  /*color:rgb(211, 189, 189);*/
+  color: #dbe2bb; 
+}
+
+.btn-logout:hover{
+  font-weight: bold;
+  color: #161616; 
+}
+
+.icon-group a {
+  color: white;
+  font-size: 28px;
+  margin-left: 5px; 
+}
+
+.icon-group a:last-child {
+  margin-left: 10px; 
 }
 
 .perfil-card {
@@ -107,7 +127,6 @@ h4, p {
   text-decoration: none;
 }
 
-/* Recetas y Recetas Guardadas */
 .card-receta {
   background-color: white; 
   border: 2px solid #da2627; 
@@ -124,7 +143,6 @@ h4, p {
   height: auto;
 }
 
-/* Recetas y botones */
 .titulo-seccion {
   color: #da2627;
   font-weight: bold;
@@ -132,7 +150,6 @@ h4, p {
   margin-bottom: 15px;
 }
 
-/* Botón editar receta */
 .btn-editarReceta {
   display: inline-block;
   background-color: #da2627;
@@ -149,7 +166,6 @@ h4, p {
   text-decoration: none;
 }
 
-/* Botón eliminar */
 .btn-eliminar {
   display: inline-block;
   background-color: #6c757d;

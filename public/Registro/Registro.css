@@ -3,7 +3,7 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: Arial, sans-serif;
-    background-color: #dbe2bb; /*#6a714a;*/
+    background-color: #dbe2bb; 
     min-height: 100vh;
     display: flex;
     flex-direction: column;

@@ -25,7 +25,6 @@ body {
   margin: 0 auto 20px;   
 }
 
-/* Navbar */
 .navbar-custom {
   background-color: #da2627; 
   padding: 10px 20px;
@@ -47,11 +46,14 @@ body {
   margin-right: 5px;
 }
 
+#fotoNavbar {
+  border-radius: 50%;
+}
+
 .username {
   font-weight: bold;
 }
 
-/* Barra de búsqueda */
 .search-bar input {
   border-radius: 20px;
   padding: 5px 15px;
@@ -65,7 +67,6 @@ body {
   margin-left: -23px;
 }
 
-/* Botón publicar */
 .btn-publish, i {
   color: white;
   font-size: 28px;
@@ -74,8 +75,7 @@ body {
 
 #publicar:hover, .btn-search:hover{
   font-weight: bold;
-  color: #dbe2bb; /*#6a714a;*/
-  /*color:rgb(211, 189, 189);*/
+  color: #dbe2bb; 
 }
 
 .btn-guardar {

@@ -14,16 +14,15 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container-fluid d-flex align-items-center justify-content-between">
-      
       <div class="d-flex align-items-center">
         <a href="/PaginaPrincipal/PaginaPrincipal.html" title="PalAntojo">
           <img src="/Logo.png" alt="Logo" class="logo">
         </a>
         <div class="d-flex align-items-center user-info">
           <a href="/Perfil/Perfil.html" title="Perfil de usuario">
-            <img src="/Imagenes/default.png" alt="Foto de perfil" class="logo">
+            <img id="fotoNavbar" src="/Imagenes/default.png" alt="Foto de perfil" class="logo">
           </a>
-          <span class="username">@nombreUsuario</span>
+          <span class="username" id="nombreNavbar">@nombreUsuario</span>
         </div>
       </div>
 
@@ -128,6 +127,14 @@
   </footer>
 
   <script>
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    if (!user) {
+      window.location.href = "/InicioSesion/InicioSesion.html";
+    } else {
+      document.getElementById("nombreNavbar").textContent = user.username ? "@" + user.username : "@nombreUsuario";
+      document.getElementById("fotoNavbar").src = user.fotoPerfil || "/Imagenes/default.png";
+    }
+
     // Manejar la subida de imagen
     document.getElementById('imageUpload').addEventListener('click', function() {
       document.getElementById('fileInput').click();
