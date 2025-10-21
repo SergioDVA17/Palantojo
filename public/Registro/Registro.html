@@ -40,9 +40,6 @@
       </div>
 
       <button type="submit" class="btn-registro">Crear cuenta</button>
-
-      <!-- Contenedor para mensajes -->
-      <div id="alertContainer"></div>
     
       <div class="login">
        <p>¿Ya tienes cuenta? <a href="../InicioSesion/InicioSesion.html">Iniciar sesión  <i class="bi bi-arrow-right-short"></i></a></p>
@@ -62,17 +59,8 @@
 
   <script>
     const registroForm = document.getElementById('registroForm');
-    const alertContainer = document.getElementById('alertContainer');
     const profileInput = document.getElementById('profile_image');
     const preview = document.getElementById('preview');
-
-    function showAlert(message, type = "danger") {
-      alertContainer.innerHTML = `
-        <div class="alert alert-${type} alert-dismissible fade show mt-3" role="alert">
-          ${message}
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-        </div>`;
-    }
 
     // Vista previa de imagen
     profileInput.addEventListener('change', () => {
@@ -156,14 +144,30 @@
         console.log('register response:', json);
 
         if (res.ok) {
-          showAlert('Registro exitoso, redirigiendo...', 'success');
+          Swal.fire({
+          icon: 'success',
+          title: 'Registro exitoso',
+          text: 'Redirigiendo al inicio de sesión...',
+          timer: 1500,
+          showConfirmButton: false
+          });
           setTimeout(() => window.location.href = '/InicioSesion/InicioSesion.html', 1500);
         } else {
-          showAlert(json.message || 'No se pudo registrar');
+          Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: json.message || 'No se pudo registrar',
+          confirmButtonColor: '#d63838'
+          });
         }
       } catch (err) {
         console.error('Fetch error register:', err);
-        showAlert('Error en el servidor. Revisa la consola.');
+        Swal.fire({
+        icon: 'error',
+        title: 'Error del servidor',
+        text: 'Revisa la consola o intenta más tarde',
+        confirmButtonColor: '#d63838'
+        });
       }
     });
   </script>
