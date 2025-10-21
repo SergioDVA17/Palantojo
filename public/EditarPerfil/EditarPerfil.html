@@ -8,6 +8,7 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="EditarPerfil.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -75,6 +76,18 @@
   </footer>
 
   <script>
+    function showAlert(message, icon = "info", timer = 2000) {
+      Swal.fire({
+        text: message,
+        icon: icon,
+        timer: timer,
+        showConfirmButton: false,
+        toast: true,
+        position: "top-end",
+        width: "300px",
+      });
+    }
+
     const user = JSON.parse(sessionStorage.getItem("user"));
     if (!user) {
       window.location.href = "/InicioSesion/InicioSesion.html";
@@ -111,10 +124,9 @@
           body: formData
         });
 
-        const text = await res.text();
         try {
-          const data = JSON.parse(text);
-          alert(data.message);
+          const data = await res.json(); 
+          showAlert(data.message, data.success ? "success" : "error", 2500);
           if (data.success) {
             user.nombres = document.getElementById("name").value;
             user.apellidos = document.getElementById("apellido").value;
@@ -122,14 +134,18 @@
             user.username = document.getElementById("username").value;
             if (data.newFotoPerfil) user.fotoPerfil = data.newFotoPerfil;
             sessionStorage.setItem("user", JSON.stringify(user));
-            window.location.href = "/Perfil/Perfil.html";
+
+           showAlert(data.message, "success", 1500); 
+           setTimeout(() => {
+              window.location.href = "/Perfil/Perfil.html";
+           }, 1600);
           }
         } catch(err) {
           console.error("Respuesta del servidor no es JSON:", text);
-          alert("Hubo un problema con la respuesta del servidor");
+          showAlert("Hubo un problema con la respuesta del servidor", "error", 2500);
         }
       } catch (err) {
-        alert("Hubo un problema con la conexión al servidor");
+        showAlert("Hubo un problema con la conexión al servidor", "error", 2500);
         console.error(err);
       }
     });
