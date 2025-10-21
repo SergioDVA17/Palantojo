@@ -102,9 +102,51 @@
       document.getElementById("username").value = user.username || "";
     }
 
+    function validacionNombre(texto) {
+    return /^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/.test(texto.trim());
+    }
+    function validacionCorreo(correo) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo.trim());
+    }
+    function validacionUsername(username) {
+    return /^[A-Za-z0-9._-]{3,}$/.test(username.trim());
+    }
+    function validacionPass(password) {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+    }
+
     // Manejo del botón de guardar cambios (aunque de momento puede fallar el update)
     document.getElementById("btnGuardar").addEventListener("click", async (e) => {
       e.preventDefault();
+
+      const nombre = document.getElementById("name").value.trim();
+      const apellido = document.getElementById("apellido").value.trim();
+      const correo = document.getElementById("email").value.trim();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const profileFile = document.getElementById("profile_image").files[0];
+
+      if (!nombre || !validacionNombre(nombre)) {
+        showAlert("Nombre inválido", "warning");
+        return;
+      }
+      if (!apellido || !validacionNombre(apellido)) {
+        showAlert("Apellido inválido", "warning");
+        return;
+      }
+      if (!correo || !validacionCorreo(correo)) {
+        showAlert("Correo inválido", "warning");
+        return;
+      }
+      if (!username || !validacionUsername(username)) {
+        showAlert("Nombre de usuario inválido", "warning");
+        return;
+      }
+      if (password && !validacionPass(password)) {
+        showAlert("Contraseña inválida. Debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número", "warning");
+        return;
+      }
+
       const formData = new FormData();
       formData.append("id", user.id);
       formData.append("nombres", document.getElementById("name").value);
