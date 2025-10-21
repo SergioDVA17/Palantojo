@@ -74,7 +74,7 @@
         console.log('login response:', json);
 
         if (res.ok) {
-          showAlert('Inicio de sesión correcto ✅', 'success');
+          showAlert('Inicio de sesión correcto', 'success');
           sessionStorage.setItem('user', JSON.stringify(json.user));
           setTimeout(() => window.location.href = '/PaginaPrincipal/PaginaPrincipal.html', 1500);
         } else {

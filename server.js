@@ -171,7 +171,7 @@ app.post('/update-profile', upload.single('profile_image'), async (req, res) => 
 
 // ---------- RUTA RAÍZ ----------
 app.get('/', (req, res) => {
-  res.send('Servidor funcionando 🚀');
+  res.send('Servidor funcionando');
 });
 
 const PORT = 3000;
