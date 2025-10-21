@@ -131,51 +131,6 @@ footer {
 }
 
 /*..........MENSAJES.............*/
-.alert {
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    font-size: 14px;
-    width: 100%;
-}
-
-.alert-success {
-    background-color: #4a964c;
-    color: white;
-}
-
-.alert-error {
-    background-color: #be3f36;
-    color: white;
-}
-
-.alert .close {
-  padding: 0.25rem 0.5rem;
-  font-size: 1.5rem;
-  line-height: 1;
-  background-color: transparent;
-  border: none;
-  outline: none;
-  box-shadow: none;
-}
-
-.alert-dismissible {
-  position: relative;
-}
-
-.alert-dismissible .close {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 9rem;
-  padding: 0.25rem 0.5rem;
-  font-size: 1rem;
-  line-height: 1;
-  background-color: transparent;
-  border: none;
-  outline: none;
-  box-shadow: none;
-}
-
 .swal2-popup {
   font-size: 14px !important; 
   border-radius: 1rem !important; 
