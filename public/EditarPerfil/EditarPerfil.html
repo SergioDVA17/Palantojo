@@ -192,6 +192,43 @@
         console.error(err);
       }
     });
+
+   document.getElementById("btnEliminarCuenta").addEventListener("click", async () => {
+    const confirmar = await Swal.fire({
+      title: "¿Desea eliminar su cuenta?",
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#da2627",
+      cancelButtonColor: "#626a71",
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar"
+    });
+
+    if (confirmar.isConfirmed) {
+      try {
+        const res = await fetch(`/api/delete-user/${user.id}`, { method: "DELETE" });
+        const data = await res.json();
+
+        if (res.ok) {
+          await Swal.fire({
+            icon: "success",
+            title: "Cuenta eliminada",
+            text: data.message,
+            timer: 1500,
+            showConfirmButton: false
+          });
+          sessionStorage.clear();
+          setTimeout(() => (window.location.href = "/InicioSesion/InicioSesion.html"), 1500);
+        } else {
+          Swal.fire("Error", data.message || "No se pudo eliminar la cuenta", "error");
+        }
+      } catch (err) {
+        console.error("Error al eliminar cuenta:", err);
+        Swal.fire("Error", "Error en la conexión con el servidor", "error");
+      }
+    }
+  });
   </script>
 </body>
 </html>

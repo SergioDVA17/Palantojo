@@ -196,7 +196,7 @@ app.get('/users/:id', (req, res) => {
 });
 
 // ---------- RUTA PARA ELIMINAR UN USUARIO ----------
-app.delete('/delete-user/:id', (req, res) => {
+app.delete('/api/delete-user/:id', (req, res) => {
   const { id } = req.params;
   db.query('DELETE FROM users WHERE id = ?', [id], (err, result) => {
     if (err) {
@@ -206,7 +206,7 @@ app.delete('/delete-user/:id', (req, res) => {
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
-    res.json({ message: 'Su cuenta fue eliminada' });
+    res.json({ message: 'Su cuenta en PalAntojo fue eliminada' });
   });
 });
 
