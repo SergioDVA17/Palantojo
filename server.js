@@ -169,6 +169,47 @@ app.post('/update-profile', upload.single('profile_image'), async (req, res) => 
   }
 });
 
+// ---------- RUTA PARA OBTENER TODOS LOS USUARIOS ----------
+app.get('/users', (req, res) => {
+  const query = 'SELECT id, nombres, apellidos, correo, username, fotoPerfil FROM users';
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error al obtener usuarios:', err);
+      return res.status(500).json({ message: 'Error al obtener usuarios', err });
+    }
+    res.json(results);
+  });
+});
+
+// ---------- RUTA PARA OBTENER UN USUARIO POR ID ----------
+app.get('/users/:id', (req, res) => {
+  const { id } = req.params;
+  db.query(
+    'SELECT id, nombres, apellidos, correo, username, fotoPerfil FROM users WHERE id = ?',
+    [id],
+    (err, results) => {
+      if (err) return res.status(500).json({ message: 'Error en la base de datos', err });
+      if (results.length === 0) return res.status(404).json({ message: 'Usuario no encontrado' });
+      res.json(results[0]);
+    }
+  );
+});
+
+// ---------- RUTA PARA ELIMINAR UN USUARIO ----------
+app.delete('/delete-user/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('DELETE FROM users WHERE id = ?', [id], (err, result) => {
+    if (err) {
+      console.error('Error al eliminar usuario:', err);
+      return res.status(500).json({ message: 'Error al eliminar usuario', err });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+    res.json({ message: 'Su cuenta fue eliminada' });
+  });
+});
+
 // ---------- RUTA RAÍZ ----------
 app.get('/', (req, res) => {
   res.send('Servidor funcionando');
