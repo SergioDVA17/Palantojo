@@ -93,6 +93,8 @@
       document.getElementById("nombreCompleto").textContent = nombreCompleto || "Nombre completo";
       document.getElementById("nombreUsuario").textContent = user.username ? "@" + user.username : "@nombreUsuario";
       document.getElementById("correoUsuario").textContent = user.correo || "correo@ejemplo.com";
+
+      document.title = `PalAntojo / @${user.username}`;
     }
   </script>
 </body>
