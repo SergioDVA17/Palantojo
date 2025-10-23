@@ -104,19 +104,19 @@ body {
   margin-top: 5px;
   display: inline-block;
   background-color: #da2627;
-  border-color: #da2627;
   color: white;
   padding: 8px 12px;
   border-radius: 10px;
   font-weight: bold;
   text-decoration: none;
+  border: none;
 }
 
 .btn-guardar:hover {
   background-color: #a71d2a;
   color: white;
   text-decoration: none;
-  border-color:#a71d2a;
+  border: none;
 }
 
 .btn-cancelar {
@@ -148,14 +148,24 @@ body {
   text-decoration: none;
   border: none;
   margin-bottom: 5px;
-  border-color: #161616;
   font-size: 12px;
   background-color: #eeeeee;
+  border-color: #eeeeee;
+  border: none;
 }
 
 .btn-eliminar:hover {
-  color: #da2627;
+  color: #eeeeee;
+  font-weight: bold;
+  background-color: #da2627;
   text-decoration: none;
+  border-color: #eeeeee;
+}
+
+.btn-eliminar:focus, .btn-guardar:focus,
+.btn-eliminar:active, .btn-guardar:active {
+  outline: none;
+  box-shadow: none;
 }
 
 footer {
@@ -193,10 +203,12 @@ footer {
 .swal2-confirm:hover {
   background-color: #d63838 !important;
   border: none !important;
+  border-color: none;
 }
 
 .swal2-cancel {
   border: none !important;
   border-radius: 0.5rem !important;
   padding: 0.5em 1.5em !important;
+  border-color: none;
 }

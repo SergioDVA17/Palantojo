@@ -152,9 +152,11 @@ footer {
   border: none !important;
   border-radius: 0.5rem !important;
   padding: 0.5em 1.5em !important;
+  border-color: none;
 }
 
 .swal2-confirm:hover {
   background-color: #d63838 !important;
   border: none !important;
+  border-color: none;
 }

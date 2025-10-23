@@ -117,6 +117,10 @@ h4, p {
   margin: 5px 0;
 }
 
+h4 {
+  font-weight: bold;
+}
+
 .btn-editar {
   display: inline-block;
   background-color: #da2627;
@@ -174,10 +178,11 @@ h4, p {
 
 .btn-eliminar {
   display: inline-block;
+  border-radius: 10px;
   background-color: #6c757d;
   color: white;
   padding: 5px 10px;
-  border-radius: 5px;
+  border: none;
   font-weight: bold;
   text-decoration: none;
   margin-left: 10px;
