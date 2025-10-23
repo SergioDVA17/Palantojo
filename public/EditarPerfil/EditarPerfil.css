@@ -101,6 +101,7 @@ body {
 }
 
 .btn-guardar {
+  margin-top: 5px;
   display: inline-block;
   background-color: #da2627;
   border-color: #da2627;
@@ -136,6 +137,25 @@ body {
   color: white;
   text-decoration: none;
   border-color: #626a71;
+}
+
+.btn-eliminar {
+  width: 90px;
+  margin-left: 420px;
+  color: #161616;
+  border-radius: 10px;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
+  margin-bottom: 5px;
+  border-color: #161616;
+  font-size: 12px;
+  background-color: #eeeeee;
+}
+
+.btn-eliminar:hover {
+  color: #da2627;
+  text-decoration: none;
 }
 
 footer {
