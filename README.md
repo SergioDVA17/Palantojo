@@ -1,4 +1,4 @@
-# Programación Web 2 - PalAntojo
+# PalAntojo
 **Integrantes del equipo:**  
 ★ Alvarado Garza Alberto Jesús   1847862  
 ★ Garcia Vera Ana Sared          1845639  
@@ -17,7 +17,20 @@
 - uploads: para las imagenes subidas por los usuarios  
 
 
-**NOTAS DE LA REVISION**  
-- Las VALIDACIONES deben ser en JAVASCRIPT  
-- Acomodar mensajes en front cuestion de diseño css  
-- Agregar reportes  
+**Instrucciones de ejecución**  
+## Requisitos previos  
+- Node.js instalado  
+- MySQL Workbench  
+
+## Instrucciones
+1. Clonar el repositorio o descargar el ZIP desde Github.  
+[git clone https://github.com/tuusuario/palantojo.git  
+cd palantojo]  
+2. Instalar las dependencias.  
+[npm install]  
+3. Crear la Base de Datos en MySQL Workbech  
+[CREATE DATABASE Palan_DB]  
+luego ejecuta el script Palan_DB.sql para crear las tablas necesarias.   
+4. Iniciar el servidor desde la consola:  
+[node server.js]  
+5. Abrir el navegador y accede a: http://localhost:3000/InicioSesion/InicioSesion.html  
