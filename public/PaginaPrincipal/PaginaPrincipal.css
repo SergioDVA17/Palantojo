@@ -94,6 +94,7 @@ body {
 }
 
 .card-receta img {
+  margin-top: 2px;
   width: 100%;
   height: auto;
 }
@@ -104,20 +105,19 @@ body {
 
 .btn-detalles {
   display: inline-block;
-  background: #da2627;
-  color: white;
+  background: white;
+  border: 1px solid #da2627;
+  color: #da2627;
   padding: 5px 10px;
   border-radius: 10px;
-  font-weight: 400;
   text-decoration: none;
-  transition: background 0.3s;
 }
 
 .btn-detalles:hover {
   text-decoration: none;
   color: white;
   background-color: #d63838;
-  font-weight: 600;
+  font-weight: bold;
 }
 
 .card-user {
@@ -130,10 +130,6 @@ body {
 
 .card-user .card {
   border-radius: 15px;
-  border: 3px solid #da2627;
-}
-
-.card-user img {
   border: 3px solid #da2627;
 }
 

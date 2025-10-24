@@ -53,9 +53,9 @@
       <div class="col-md-3 card-receta">
         <img src="../Imagenes/Sopes.jpg" class="img-fluid rounded-top" alt="Platillo 1">
         <div class="card-body text-center">
-          <h5 class="card-title">Sopes</h5>
-          <p class="card-text">Descripción</p>
-          <small>Publicada por <span id="autor1">[nombre de usuario]</span></small>
+          <h5 class="card-title" style="font-weight: bold;">Sopes</h5>
+          <p class="card-text text-muted">Descripción</p>
+          <small class="text-muted">Publicada por <span id="autor1">[nombre de usuario]</span></small>
           <hr>
           <a href="/VerDetalles/VerDetalles.html" class="btn-detalles">Ver más detalles</a>
         </div>
@@ -139,7 +139,14 @@
       }
       });
 
-
+     window.addEventListener("DOMContentLoaded", async () => {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get("q");
+      if (q) {
+        searchInput.value = q;
+        searchForm.dispatchEvent(new Event("submit"));
+      }
+    });
   </script>
 </body>
 </html>
