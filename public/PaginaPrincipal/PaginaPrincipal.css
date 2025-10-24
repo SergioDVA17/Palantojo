@@ -120,6 +120,37 @@ body {
   font-weight: 600;
 }
 
+.card-user {
+  transition: transform 0.2s ease;
+}
+
+.card-user:hover {
+  transform: translateY(-3px);
+}
+
+.card-user .card {
+  border-radius: 15px;
+  border: 3px solid #da2627;
+}
+
+.card-user img {
+  border: 3px solid #da2627;
+}
+
+.verPerfilBtn {
+  border-radius: 10px;
+  background-color: white;
+  color: #da2627;
+  border: 1px solid #da2627;
+  font-size: 15px;
+}
+
+.verPerfilBtn:hover {
+  border-radius: 10px;
+  background-color: #da2627;
+  color: white;
+}
+
 footer {
     margin-top: 190px;
     text-align: center;
