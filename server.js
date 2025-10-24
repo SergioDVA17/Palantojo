@@ -23,8 +23,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const db = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
-	//Yo necesito la conexion con contra xd
-	password: 'qweasdzxc',
+	//Quitar contraseña si no eres Alberto
+	password: '',
 	database: 'Palan_DB',
 	port: 3306
 });

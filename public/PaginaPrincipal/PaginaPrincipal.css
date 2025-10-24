@@ -99,7 +99,7 @@ body {
 	object-fit: cover;
 }
 
-.btn-detalles {
+.verPerfilBtn {
 	display: inline-block;
 	background: white;
 	border: 1px solid #da2627;
@@ -109,7 +109,7 @@ body {
 	text-decoration: none;
 }
 
-.btn-detalles:hover {
+.verPerfilBtn:hover {
 	text-decoration: none;
 	color: white;
 	background-color: #d63838;
@@ -139,7 +139,6 @@ body {
 	border-radius: 15px;
 	overflow: hidden;
 	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-	border: 3px solid #da2627;
 	position: relative;
 	transition: transform 0.3s ease;
 }
@@ -207,7 +206,6 @@ body {
 	height: 50px;
 	border-radius: 50%;
 	object-fit: cover;
-	border: 2px solid #da2627;
 }
 
 .stats-popular {
@@ -228,21 +226,20 @@ body {
 }
 
 .btn-ver-receta-popular {
-	background: linear-gradient(135deg, #da2627, #FF6B6B);
-	color: white;
-	border: none;
-	border-radius: 25px;
-	padding: 12px 30px;
-	font-weight: bold;
+	display: inline-block;
+	background: white;
+	color: #da2627;
+	padding: 5px 10px;
+	border-radius: 10px;
 	text-decoration: none;
-	transition: all 0.3s ease;
+	border: 1px solid #da2627;
 }
 
 .btn-ver-receta-popular:hover {
-	transform: scale(1.05);
-	color: white;
 	text-decoration: none;
-	box-shadow: 0 4px 12px rgba(218, 38, 39, 0.4);
+	color: white;
+	background-color: #d63838;
+	font-weight: bold;
 }
 
 /* TOP CHEFS */
@@ -259,7 +256,6 @@ body {
 
 .card-chef:hover {
 	transform: translateY(-5px);
-	border-color: #da2627;
 }
 
 .chef-posicion {
@@ -302,7 +298,6 @@ body {
 	height: 80px;
 	border-radius: 50%;
 	object-fit: cover;
-	border: 3px solid #da2627;
 	margin-bottom: 10px;
 }
 
@@ -342,18 +337,27 @@ body {
 }
 
 .btn-visitar-perfil {
+	display: inline-block;
 	background: white;
-	border: 2px solid #da2627;
+	border: 1px solid #da2627;
 	color: #da2627;
-	border-radius: 20px;
-	padding: 8px 20px;
-	font-weight: bold;
-	transition: all 0.3s ease;
+	padding: 5px 10px;
+	border-radius: 10px;
+	text-decoration: none;
 }
 
 .btn-visitar-perfil:hover {
-	background: #da2627;
+	text-decoration: none;
 	color: white;
+	background-color: #d63838;
+	font-weight: bold;
+}
+
+#mensajeVacioChefs, #mensajeVacioPopular {
+	background-color: #f0f0f0 !important;
+	color: black !important;
+	border-color: #f0f0f0;
+
 }
 
 /* FOOTER */

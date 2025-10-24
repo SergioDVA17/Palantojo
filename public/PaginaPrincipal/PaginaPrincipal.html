@@ -58,8 +58,8 @@
 			<div class="row mb-5">
 				<div class="col-12">
 					<div class="seccion-titulo-principal">
-						<h2 class="titulo-seccion-principal">🔥 Lo Más Popular</h2>
-						<p class="text-muted">La receta favorita de la comunidad</p>
+						<h2 class="titulo-seccion-principal"> LO MÁS POPULAR</h2>
+						<p class="text-muted">La receta favorita de la comunidad en PalAntojo</p>
 					</div>
 
 					<div id="loadingPopular" class="text-center my-4">
@@ -76,7 +76,7 @@
 
 					<div id="mensajeVacioPopular" class="alert alert-info text-center"
 						style="display: none;">
-						<h4>📝 Aún no hay recetas con comentarios</h4>
+						<h4>Aún no hay receta popular</h4>
 						<p>La receta más popular aparecerá aquí cuando la comunidad comience a
 							comentar.
 						</p>
@@ -88,8 +88,8 @@
 			<div class="row mb-5">
 				<div class="col-12">
 					<div class="seccion-titulo-principal">
-						<h2 class="titulo-seccion-principal">👨‍🍳 Top Chefs</h2>
-						<p class="text-muted">Los usuarios más activos de la comunidad</p>
+						<h2 class="titulo-seccion-principal">TOP CHEFS</h2>
+						<p class="text-muted">Los usuarios más activos en PalAntojo</p>
 					</div>
 
 					<div id="loadingChefs" class="text-center my-4">
@@ -105,7 +105,7 @@
 
 					<div id="mensajeVacioChefs" class="alert alert-info text-center"
 						style="display: none;">
-						<h4>👥 Aún no hay chefs activos</h4>
+						<h4>Aún no hay chefs activos</h4>
 						<p>Los chefs más activos aparecerán aquí cuando publiquen recetas.</p>
 					</div>
 				</div>
@@ -211,7 +211,6 @@
                     <i class="bi bi-star-fill"></i>
                     <div>
                       <strong>${receta.rating_promedio.toFixed(1)}</strong>
-                      <small>rating</small>
                     </div>
                   </div>
                 </div>
@@ -219,7 +218,7 @@
 
               <div class="text-center mt-4">
                 <a href="/VerDetalles/VerDetalles.html?id=${receta.id}" class="btn btn-ver-receta-popular">
-                  <i class="bi bi-eye"></i> Ver Receta Completa
+                  Ver más detalles
                 </a>
               </div>
             </div>
@@ -292,13 +291,13 @@
 
 			if (posicion === 1) {
 				clasePosicion += ' chef-oro';
-				tituloPosicion = '🥇 Chef del Mes';
+				tituloPosicion = '🥇Chef del mes';
 			} else if (posicion === 2) {
 				clasePosicion += ' chef-plata';
-				tituloPosicion = '🥈 Top Chef';
+				tituloPosicion = '🥈Top Chef';
 			} else if (posicion === 3) {
 				clasePosicion += ' chef-bronce';
-				tituloPosicion = '🥉 Chef Destacado';
+				tituloPosicion = '🥉Chef destacado';
 			}
 
 			col.innerHTML = `
@@ -310,7 +309,7 @@
             <img src="${chef.fotoPerfil}" alt="${chef.username}" class="chef-foto">
             <div class="chef-info">
               <h4 class="chef-nombre">${chef.nombres} ${chef.apellidos}</h4>
-              <p class="chef-username">@${chef.username}</p>
+              <p class="chef-username text-muted">@${chef.username}</p>
             </div>
           </div>
           
@@ -340,7 +339,7 @@
 
           <div class="text-center mt-3">
             <button class="btn btn-visitar-perfil" onclick="visitarPerfil(${chef.id})">
-              <i class="bi bi-person"></i> Visitar Perfil
+              Ver perfil
             </button>
           </div>
         </div>
