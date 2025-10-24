@@ -312,3 +312,96 @@ const PORT = 3000;
 app.listen(PORT, () =>
 	console.log(`Servidor escuchando en http://localhost:${PORT}`)
 );
+// ---------- RUTA PARA OBTENER LA RECETA MÁS COMENTADA ----------
+app.get('/api/reportes/receta-mas-comentada', (req, res) => {
+	const query = `
+    SELECT 
+      r.id_receta,
+      r.nombre_platillo,
+      r.descripcion,
+      u.username as autor,
+      u.fotoPerfil as autor_foto,
+      COUNT(c.id_comentario) as total_comentarios,
+      AVG(cal.calificacion) as rating_promedio,
+      i.url_imagen,
+      e.nombre_estado
+    FROM Recetas r
+    JOIN users u ON r.id_usuario = u.id
+    LEFT JOIN Comentarios c ON r.id_receta = c.id_receta
+    LEFT JOIN Calificaciones cal ON r.id_receta = cal.id_receta
+    LEFT JOIN Imagenes i ON r.id_receta = i.id_receta
+    LEFT JOIN Estados e ON r.id_estado = e.id_estado
+    GROUP BY r.id_receta, u.username, u.fotoPerfil, i.url_imagen, e.nombre_estado
+    ORDER BY total_comentarios DESC
+    LIMIT 1
+  `;
+
+	db.query(query, (err, results) => {
+		if (err) {
+			console.error('Error al obtener receta más comentada:', err);
+			return res.status(500).json({ message: 'Error en la base de datos', err });
+		}
+
+		if (results.length === 0) {
+			return res.json(null);
+		}
+
+		const row = results[0];
+		const receta = {
+			id: row.id_receta,
+			titulo: row.nombre_platillo,
+			descripcion: row.descripcion,
+			autor: row.autor,
+			autor_foto: row.autor_foto,
+			estado: row.nombre_estado,
+			imagen: row.url_imagen || '/Imagenes/default.png',
+			total_comentarios: row.total_comentarios,
+			rating_promedio: parseFloat(row.rating_promedio) || 0
+		};
+
+		res.json(receta);
+	});
+});
+
+// ---------- RUTA PARA OBTENER TOP 3 USUARIOS CON MÁS RECETAS ----------
+app.get('/api/reportes/top-usuarios-recetas', (req, res) => {
+	const query = `
+    SELECT 
+      u.id,
+      u.username,
+      u.nombres,
+      u.apellidos,
+      u.fotoPerfil,
+      COUNT(r.id_receta) as total_recetas,
+      AVG(cal.calificacion) as rating_promedio,
+      COUNT(DISTINCT c.id_comentario) as total_comentarios_recibidos
+    FROM users u
+    LEFT JOIN Recetas r ON u.id = r.id_usuario
+    LEFT JOIN Calificaciones cal ON r.id_receta = cal.id_receta
+    LEFT JOIN Comentarios c ON r.id_receta = c.id_receta
+    GROUP BY u.id, u.username, u.nombres, u.apellidos, u.fotoPerfil
+    HAVING total_recetas > 0
+    ORDER BY total_recetas DESC
+    LIMIT 3
+  `;
+
+	db.query(query, (err, results) => {
+		if (err) {
+			console.error('Error al obtener top usuarios:', err);
+			return res.status(500).json({ message: 'Error en la base de datos', err });
+		}
+
+		const usuarios = results.map(row => ({
+			id: row.id,
+			username: row.username,
+			nombres: row.nombres,
+			apellidos: row.apellidos,
+			fotoPerfil: row.fotoPerfil || '/Imagenes/default.png',
+			total_recetas: row.total_recetas,
+			rating_promedio: parseFloat(row.rating_promedio) || 0,
+			total_comentarios_recibidos: row.total_comentarios_recibidos
+		}));
+
+		res.json(usuarios);
+	});
+});
