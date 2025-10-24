@@ -32,3 +32,12 @@ luego ejecuta el script Palan_DB.sql para crear las tablas necesarias.
 4. Iniciar el servidor desde la consola:  
 [node server.js]  
 5. Abrir el navegador y accede a: http://localhost:3000/InicioSesion/InicioSesion.html  
+
+**REVISION**  
+- arreglar la pagina inicial en css  
+- hacer que se vea la info  
+- pasar los html a React  
+- si no jala el fetch cambiar a axios, si funciona, dejarlo así  
+- pasar por ejemplo el crearCardReceta a un componente  
+- agregar en los endpoints descripcion y cambiar los parametros a body  
+- agregar las rutas de las páginas  
