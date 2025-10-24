@@ -1,173 +1,301 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> PalAntojo / Crear - Editar publicación</title>
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="CrearEditarPublicacion.css">
-  <link rel="icon" type="image/x-icon" href="/Logo.png">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title> PalAntojo / Crear - Editar publicación</title>
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+	<link rel="stylesheet" href="CrearEditarPublicacion.css">
+	<link rel="icon" type="image/x-icon" href="/Logo.png">
+	<!-- AGREGAR SWEETALERT2 -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
-  
-  <!-- NAVBAR -->
-  <nav class="navbar navbar-expand-lg navbar-custom">
-    <div class="container-fluid d-flex align-items-center justify-content-between">
-      <div class="d-flex align-items-center">
-        <a href="/PaginaPrincipal/PaginaPrincipal.html" title="PalAntojo">
-          <img src="/Logo.png" alt="Logo" class="logo">
-        </a>
-        <div class="d-flex align-items-center user-info">
-          <a href="/Perfil/Perfil.html" title="Perfil de usuario">
-            <img id="fotoNavbar" src="/Imagenes/default.png" alt="Foto de perfil" class="logo">
-          </a>
-          <span class="username" id="nombreNavbar">@nombreUsuario</span>
-        </div>
-      </div>
 
-      <form id="searchForm" class="form-inline search-bar">
-        <input id="searchInput" class="form-control" type="search" placeholder="Buscar..." aria-label="Search">
-        <button class="btn btn-search" type="submit"><i class="bi bi-search" id="buscar"></i></button>
-      </form>
+	<!-- NAVBAR -->
+	<nav class="navbar navbar-expand-lg navbar-custom">
+		<div class="container-fluid d-flex align-items-center justify-content-between">
+			<div class="d-flex align-items-center">
+				<a href="/PaginaPrincipal/PaginaPrincipal.html" title="PalAntojo">
+					<img src="/Logo.png" alt="Logo" class="logo">
+				</a>
+				<div class="d-flex align-items-center user-info">
+					<a href="/Perfil/Perfil.html" title="Perfil de usuario">
+						<img id="fotoNavbar" src="/Imagenes/default.png" alt="Foto de perfil"
+							class="logo">
+					</a>
+					<span class="username" id="nombreNavbar">@nombreUsuario</span>
+				</div>
+			</div>
 
-      <div class="d-flex align-items-center icon-group">
-        <a href="/CrearEditarPublicacion/CrearEditarPublicacion.html" class="btn-publish" title="Publicar receta">
-          <i class="bi bi-plus-circle-fill" id="publicar"></i>
-        </a>
+			<form id="searchForm" class="form-inline search-bar">
+				<input id="searchInput" class="form-control" type="search" placeholder="Buscar..."
+					aria-label="Search">
+				<button class="btn btn-search" type="submit"><i class="bi bi-search"
+						id="buscar"></i></button>
+			</form>
 
-        <a href="/InicioSesion/InicioSesion.html" class="btn-logout" title="Cerrar sesión">
-          <i class="bi bi-box-arrow-right" id="logout"></i>
-        </a>
-      </div>
-    </div>
-  </nav>
+			<div class="d-flex align-items-center icon-group">
+				<a href="/CrearEditarPublicacion/CrearEditarPublicacion.html" class="btn-publish"
+					title="Publicar receta">
+					<i class="bi bi-plus-circle-fill" id="publicar"></i>
+				</a>
 
-  <!-- Contenido principal -->
-  <main class="container mt-4">
-    <div class="main-container">
-      <h2 class="text-center section-title">Nueva Receta</h2>
-      
-      <!-- Subir imagen -->
-      <div class="image-upload" id="imageUpload">
-        <i class="bi bi-cloud-arrow-up upload-icon"></i>
-        <p>Haz clic para seleccionar una foto del platillo</p>
-        <input type="file" id="fileInput" accept="image/*" style="display: none;">
-      </div>
-      
-      <form id="recipeForm">
-        <!-- Nombre del platillo -->
-        <div class="form-group">
-          <label for="platilloName" class="section-title">Nombre del platillo</label>
-          <input type="text" class="form-control" id="platilloName" placeholder="Ej: Tacos de canasta">
-        </div>
+				<a href="/InicioSesion/InicioSesion.html" class="btn-logout" title="Cerrar sesión">
+					<i class="bi bi-box-arrow-right" id="logout"></i>
+				</a>
+			</div>
+		</div>
+	</nav>
 
-        <!-- Estado de origen -->
-        <div class="form-group">
-          <label for="platilloEstado" class="section-title">Estado de origen</label>
-          <select class="form-control" id="platilloEstado">
-            <option value="">Selecciona un estado...</option>
-            <option>Aguascalientes</option>
-            <option>Baja California</option>
-            <option>Baja California Sur</option>
-            <option>Campeche</option>
-            <option>Chiapas</option>
-            <option>Chihuahua</option>
-            <option>Ciudad de México</option>
-            <option>Coahuila</option>
-            <option>Colima</option>
-            <option>Durango</option>
-            <option>Estado de México</option>
-            <option>Guanajuato</option>
-            <option>Guerrero</option>
-            <option>Hidalgo</option>
-            <option>Jalisco</option>
-            <option>Michoacán</option>
-            <option>Morelos</option>
-            <option>Nayarit</option>
-            <option>Nuevo León</option>
-            <option>Oaxaca</option>
-            <option>Puebla</option>
-            <option>Querétaro</option>
-            <option>Quintana Roo</option>
-            <option>San Luis Potosí</option>
-            <option>Sinaloa</option>
-            <option>Sonora</option>
-            <option>Tabasco</option>
-            <option>Tamaulipas</option>
-            <option>Tlaxcala</option>
-            <option>Veracruz</option>
-            <option>Yucatán</option>
-            <option>Zacatecas</option>
-          </select>
-        </div>
-        
-        <!-- Descripción -->
-        <div class="form-group">
-          <label for="platilloDescription" class="section-title">Descripción</label>
-          <textarea class="form-control" id="platilloDescription" placeholder="Describe el platillo..." rows="3"></textarea>
-        </div>
-        
-        <!-- Ingredientes -->
-        <div class="form-group">
-          <label for="platilloIngredients" class="section-title">Ingredientes</label>
-          <textarea class="form-control" id="platilloIngredients" placeholder="Lista los ingredientes..." rows="5"></textarea>
-        </div>
-        
-        <!-- Instrucciones -->
-        <div class="form-group">
-          <label for="platilloInstructions" class="section-title">Instrucciones</label>
-          <textarea class="form-control" id="platilloInstructions" placeholder="Pasos para la receta..." rows="7"></textarea>
-        </div>
-        
-        <div class="text-center mt-4">
-          <button type="submit" class="btn-action btn-publish-action">PUBLICAR</button>
-          <button type="button" class="btn-action btn-cancel" onclick="window.location.href='../CrearEditarPublicacion/CrearEditarPublicacion.html'">CANCELAR</button>
-        </div>
-      </form>
-    </div>
-  </main>
+	<!-- Contenido principal -->
+	<main class="container mt-4">
+		<div class="main-container">
+			<h2 class="text-center section-title">Nueva Receta</h2>
 
-  <footer>
-    © 2025, PalAntojo
-  </footer>
+			<!-- Subir imagen -->
+			<div class="image-upload" id="imageUpload">
+				<i class="bi bi-cloud-arrow-up upload-icon"></i>
+				<p>Haz clic para seleccionar una foto del platillo</p>
+				<input type="file" id="fileInput" accept="image/*" style="display: none;">
+			</div>
 
-  <script>
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    if (!user) {
-      window.location.href = "/InicioSesion/InicioSesion.html";
-    } else {
-      document.getElementById("nombreNavbar").textContent = user.username ? "@" + user.username : "@nombreUsuario";
-      document.getElementById("fotoNavbar").src = user.fotoPerfil || "/Imagenes/default.png";
-    }
+			<form id="recipeForm">
+				<!-- Nombre del platillo -->
+				<div class="form-group">
+					<label for="platilloName" class="section-title">Nombre del platillo</label>
+					<input type="text" class="form-control" id="platilloName"
+						placeholder="Ej: Tacos de canasta" required>
+				</div>
 
-    // Manejar la subida de imagen
-    document.getElementById('imageUpload').addEventListener('click', function() {
-      document.getElementById('fileInput').click();
-    });
-    
-    document.getElementById('fileInput').addEventListener('change', function(e) {
-      if (e.target.files.length) {
-        const fileName = e.target.files[0].name;
-        document.querySelector('#imageUpload p').textContent = `Imagen seleccionada: ${fileName}`;
-      }
-    });
-    
-    document.getElementById('recipeForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      alert('¡Receta publicada con éxito!');
-      window.location.href = '../PaginaPrincipal/PaginaPrincipal.html';
-    });
+				<!-- Estado de origen -->
+				<div class="form-group">
+					<label for="platilloEstado" class="section-title">Estado de origen</label>
+					<select class="form-control" id="platilloEstado" required>
+						<option value="">Selecciona un estado...</option>
+						<option>Aguascalientes</option>
+						<option>Baja California</option>
+						<option>Baja California Sur</option>
+						<option>Campeche</option>
+						<option>Chiapas</option>
+						<option>Chihuahua</option>
+						<option>Ciudad de México</option>
+						<option>Coahuila</option>
+						<option>Colima</option>
+						<option>Durango</option>
+						<option>Estado de México</option>
+						<option>Guanajuato</option>
+						<option>Guerrero</option>
+						<option>Hidalgo</option>
+						<option>Jalisco</option>
+						<option>Michoacán</option>
+						<option>Morelos</option>
+						<option>Nayarit</option>
+						<option>Nuevo León</option>
+						<option>Oaxaca</option>
+						<option>Puebla</option>
+						<option>Querétaro</option>
+						<option>Quintana Roo</option>
+						<option>San Luis Potosí</option>
+						<option>Sinaloa</option>
+						<option>Sonora</option>
+						<option>Tabasco</option>
+						<option>Tamaulipas</option>
+						<option>Tlaxcala</option>
+						<option>Veracruz</option>
+						<option>Yucatán</option>
+						<option>Zacatecas</option>
+					</select>
+				</div>
 
-    // Busqueda
-    const searchForm = document.getElementById("searchForm");
-    const searchInput = document.getElementById("searchInput");
-    searchForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const query = searchInput.value.trim();
-      if (!query) return;
-      window.location.href = `/PaginaPrincipal/PaginaPrincipal.html?q=${encodeURIComponent(query)}`;
-    });    
-  </script>
+				<!-- Descripción -->
+				<div class="form-group">
+					<label for="platilloDescription" class="section-title">Descripción</label>
+					<textarea class="form-control" id="platilloDescription"
+						placeholder="Describe el platillo..." rows="3" required></textarea>
+				</div>
+
+				<!-- Ingredientes -->
+				<div class="form-group">
+					<label for="platilloIngredients" class="section-title">Ingredientes</label>
+					<textarea class="form-control" id="platilloIngredients"
+						placeholder="Lista los ingredientes..." rows="5" required></textarea>
+				</div>
+
+				<!-- Instrucciones -->
+				<div class="form-group">
+					<label for="platilloInstructions" class="section-title">Instrucciones</label>
+					<textarea class="form-control" id="platilloInstructions"
+						placeholder="Pasos para la receta..." rows="7" required></textarea>
+				</div>
+
+				<div class="text-center mt-4">
+					<!-- BOTÓN PUBLICAR CON ALERT - AGREGAR ID -->
+					<button type="submit" class="btn-action btn-publish-action"
+						id="btnPublicar">PUBLICAR</button>
+					<!-- BOTÓN CANCELAR CON ALERT - CAMBIAR A BUTTON -->
+					<button type="button" class="btn-action btn-cancel"
+						id="btnCancelar">CANCELAR</button>
+				</div>
+			</form>
+		</div>
+	</main>
+
+	<footer>
+		© 2025, PalAntojo
+	</footer>
+
+	<script>
+		const user = JSON.parse(sessionStorage.getItem("user"));
+		if (!user) {
+			window.location.href = "/InicioSesion/InicioSesion.html";
+		} else {
+			document.getElementById("nombreNavbar").textContent = user.username ? "@" + user.username : "@nombreUsuario";
+			document.getElementById("fotoNavbar").src = user.fotoPerfil || "/Imagenes/default.png";
+		}
+
+		// ========== DEBUG: Verificar que los elementos existen ==========
+		console.log('Elemento recipeForm:', document.getElementById('recipeForm'));
+		console.log('Elemento btnPublicar:', document.getElementById('btnPublicar'));
+		console.log('Elemento btnCancelar:', document.getElementById('btnCancelar'));
+
+		// Manejar la subida de imagen
+		const imageUpload = document.getElementById('imageUpload');
+		if (imageUpload) {
+			imageUpload.addEventListener('click', function () {
+				document.getElementById('fileInput').click();
+			});
+		}
+
+		const fileInput = document.getElementById('fileInput');
+		if (fileInput) {
+			fileInput.addEventListener('change', function (e) {
+				if (e.target.files.length) {
+					const fileName = e.target.files[0].name;
+					const uploadText = document.querySelector('#imageUpload p');
+					if (uploadText) {
+						uploadText.textContent = `Imagen seleccionada: ${fileName}`;
+					}
+				}
+			});
+		}
+
+		// ========== ALERT PARA PUBLICAR RECETA ==========
+		const recipeForm = document.getElementById('recipeForm');
+		if (recipeForm) {
+			recipeForm.addEventListener('submit', function (e) {
+				e.preventDefault();
+				console.log('Formulario enviado');
+
+				// Validar campos requeridos
+				const nombre = document.getElementById('platilloName').value.trim();
+				const estado = document.getElementById('platilloEstado').value;
+				const descripcion = document.getElementById('platilloDescription').value.trim();
+				const ingredientes = document.getElementById('platilloIngredients').value.trim();
+				const instrucciones = document.getElementById('platilloInstructions').value.trim();
+
+				if (!nombre || !estado || !descripcion || !ingredientes || !instrucciones) {
+					Swal.fire({
+						title: 'Campos incompletos',
+						text: 'Por favor llena todos los campos requeridos',
+						icon: 'warning',
+						confirmButtonColor: '#da2627'
+					});
+					return;
+				}
+
+				Swal.fire({
+					title: '¿Publicar receta?',
+					html: `
+            <div style="text-align: left;">
+              <p><strong>Receta:</strong> ${nombre}</p>
+              <p><strong>Estado:</strong> ${estado}</p>
+              <p>¿Estás seguro de que quieres publicar esta receta? Será visible para toda la comunidad.</p>
+            </div>
+          `,
+					icon: 'question',
+					showCancelButton: true,
+					confirmButtonColor: '#da2627',
+					cancelButtonColor: '#6c757d',
+					confirmButtonText: 'Sí, publicar',
+					cancelButtonText: 'Revisar',
+					focusConfirm: false
+				}).then((result) => {
+					if (result.isConfirmed) {
+						// Aquí iría la lógica para guardar la receta en la base de datos
+						console.log('Publicando receta:', {nombre, estado, descripcion});
+
+						// Simular éxito de publicación
+						Swal.fire({
+							title: '¡Receta publicada!',
+							text: 'Tu receta ha sido compartida con la comunidad',
+							icon: 'success',
+							confirmButtonColor: '#da2627',
+							timer: 2000,
+							showConfirmButton: false
+						}).then(() => {
+							// Redirigir a la página principal después de publicar
+							window.location.href = '../PaginaPrincipal/PaginaPrincipal.html';
+						});
+					}
+				});
+			});
+		} else {
+			console.error('No se encontró el formulario recipeForm');
+		}
+
+		// ========== ALERT PARA CANCELAR ==========
+		const btnCancelar = document.getElementById('btnCancelar');
+		if (btnCancelar) {
+			btnCancelar.addEventListener('click', function () {
+				console.log('Botón Cancelar clickeado');
+				Swal.fire({
+					title: '¿Cancelar publicación?',
+					text: 'Los cambios no guardados se perderán',
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#da2627',
+					cancelButtonColor: '#6c757d',
+					confirmButtonText: 'Sí, cancelar',
+					cancelButtonText: 'Seguir editando'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						window.location.href = '../PaginaPrincipal/PaginaPrincipal.html';
+					}
+				});
+			});
+		} else {
+			console.error('No se encontró el botón btnCancelar');
+		}
+
+		// Busqueda
+		const searchForm = document.getElementById("searchForm");
+		const searchInput = document.getElementById("searchInput");
+		if (searchForm && searchInput) {
+			searchForm.addEventListener("submit", (e) => {
+				e.preventDefault();
+				const query = searchInput.value.trim();
+				if (!query) return;
+				window.location.href = `/PaginaPrincipal/PaginaPrincipal.html?q=${encodeURIComponent(query)}`;
+			});
+		}
+
+		// ========== AGREGAR EVENT LISTENER AL CARGAR LA PÁGINA ==========
+		document.addEventListener('DOMContentLoaded', function () {
+			console.log('Página CrearEditarPublicacion cargada, verificando elementos...');
+
+			// Verificar nuevamente después de que cargue todo
+			setTimeout(() => {
+				console.log('Elementos después de carga completa:');
+				console.log('recipeForm:', document.getElementById('recipeForm'));
+				console.log('btnPublicar:', document.getElementById('btnPublicar'));
+				console.log('btnCancelar:', document.getElementById('btnCancelar'));
+			}, 100);
+		});
+	</script>
 </body>
+
 </html>
