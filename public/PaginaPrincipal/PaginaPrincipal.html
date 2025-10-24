@@ -26,8 +26,8 @@
         </div>
       </div>
 
-      <form class="form-inline search-bar">
-        <input class="form-control" type="search" placeholder="Buscar receta..." aria-label="Search">
+      <form id="searchForm" class="form-inline search-bar">
+        <input id="searchInput" class="form-control" type="search" placeholder="Buscar..." aria-label="Search">
         <button class="btn btn-search" type="submit"><i class="bi bi-search" id="buscar"></i></button>
       </form>
 
@@ -43,12 +43,13 @@
     </div>
   </nav>
 
-  <!-- Contenido principal -->
   <main class="container mt-4">
-    <h4 class="titulo">Recetas mejor calificadas:</h4>
-
-    <div class="row justify-content-center">
+    <h4 class="titulo" id="mainTitle">Recetas mejor calificadas:</h4>
+    <div id="mainContent" class="row justify-content-center">
+     
+      <!-- AQUI VAN CARDS PARA LA BUSQUEDA -->
       
+      <!-- CARDS DE RECETAS CUANDO ES PAGINA PRINCIPAL -->
       <div class="col-md-3 card-receta">
         <img src="../Imagenes/Sopes.jpg" class="img-fluid rounded-top" alt="Platillo 1">
         <div class="card-body text-center">
@@ -59,18 +60,6 @@
           <a href="/VerDetalles/VerDetalles.html" class="btn-detalles">Ver más detalles</a>
         </div>
       </div>
-
-      <div class="col-md-3 card-receta">
-        <img src="../Imagenes/Mole con arroz.jpg" class="img-fluid rounded-top" alt="Platillo 2">
-        <div class="card-body text-center">
-          <h5 class="card-title">Mole con arroz</h5>
-          <p class="card-text">Descripcion</p>
-          <small>Publicada por <span id="autor2">[nombre de usuario]</span></small>
-          <hr>
-          <a href="/VerDetalles/VerDetalles.html" class="btn-detalles">Ver más detalles</a>
-        </div>
-      </div>
-
     </div>
   </main>
 
@@ -87,6 +76,70 @@
       document.getElementById("nombreNavbar").textContent = "@" + user.username;
             document.getElementById("fotoNavbar").src = user.fotoPerfil || "/Imagenes/default.png";
     }
+
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('searchInput');
+    const mainContent = document.getElementById('mainContent');
+    const mainTitle = document.getElementById('mainTitle');
+
+    searchForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const query = searchInput.value.trim();
+    if (!query) return;
+
+    mainTitle.textContent = `Buscando usuarios que coincidan con "${query}"...`;
+    mainContent.innerHTML = "";
+
+    try {
+    const res = await fetch(`/api/search/users?q=${encodeURIComponent(query)}`);
+    const users = await res.json();
+
+    if (users.length === 0) {
+      mainTitle.textContent = "No se encontraron resultados";
+      return;
+    }
+
+    mainTitle.textContent = `Resultados de búsqueda (${users.length})`;  
+    users.forEach(u => {
+      const card = document.createElement('div');
+      card.classList.add('col-md-3', 'card-user', 'text-center', 'p-3');
+
+      const isMyProfile = user.id === u.id;
+      const foto = u.fotoPerfil || "/Imagenes/default.png";
+
+      card.innerHTML = `
+        <div class="card border-0 shadow-sm">
+          <img src="${foto}" class="img-fluid rounded-circle mt-3" style="width:120px;height:120px;object-fit:cover;margin:auto;">
+          <div class="card-body">
+            <h5 class="card-title mb-0">${u.nombres} ${u.apellidos}</h5>
+            <p class="text-muted">@${u.username}</p>
+            <button class="btn btn-outline-danger btn-sm verPerfilBtn">
+              Ver perfil
+            </button>
+          </div>
+        </div>
+      `;
+
+      const btn = card.querySelector(".verPerfilBtn");
+      btn.addEventListener("click", () => {
+        if (isMyProfile) {
+          window.location.href = "/Perfil/Perfil.html";
+        } else {
+          sessionStorage.setItem("visitUserId", u.id);
+          window.location.href = "/PerfilUsuario/PerfilUsuario.html";
+        }
+      });
+
+      mainContent.appendChild(card);
+      });
+
+      } catch (err) {
+        console.error("Error en búsqueda:", err);
+        mainTitle.textContent = "Error en la búsqueda";
+      }
+      });
+
+
   </script>
 </body>
 </html>
