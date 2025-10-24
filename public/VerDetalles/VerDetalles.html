@@ -26,8 +26,8 @@
         </div>
       </div>
 
-      <form class="form-inline search-bar">
-        <input class="form-control" type="search" placeholder="Buscar receta..." aria-label="Search">
+      <form id="searchForm" class="form-inline search-bar">
+        <input id="searchInput" class="form-control" type="search" placeholder="Buscar..." aria-label="Search">
         <button class="btn btn-search" type="submit"><i class="bi bi-search" id="buscar"></i></button>
       </form>
 
@@ -105,8 +105,17 @@
     } else {
       document.getElementById("nombreNavbar").textContent = user.username ? "@" + user.username : "@nombreUsuario";
       document.getElementById("fotoNavbar").src = user.fotoPerfil || "/Imagenes/default.png";
+    
+    // Busqueda
+    const searchForm = document.getElementById("searchForm");
+    const searchInput = document.getElementById("searchInput");
+    searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const query = searchInput.value.trim();
+      if (!query) return;
+      window.location.href = `/PaginaPrincipal/PaginaPrincipal.html?q=${encodeURIComponent(query)}`;
+    });    
     }
   </script>
-   
 </body>
 </html>
