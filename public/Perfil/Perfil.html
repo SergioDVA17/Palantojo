@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/x-icon" href="/Logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PalAntojo / Perfil de usuario</title>
+  <title>PalAntojo / Mi perfil</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="Perfil.css">
@@ -26,11 +26,11 @@
         </div>
       </div>
 
-      <form class="form-inline search-bar">
-        <input class="form-control" type="search" placeholder="Buscar receta..." aria-label="Search">
+      <form id="searchForm" class="form-inline search-bar">
+        <input id="searchInput" class="form-control" type="search" placeholder="Buscar..." aria-label="Search">
         <button class="btn btn-search" type="submit"><i class="bi bi-search" id="buscar"></i></button>
       </form>
-
+      
       <div class="d-flex align-items-center icon-group">
         <a href="/CrearEditarPublicacion/CrearEditarPublicacion.html" class="btn-publish" title="Publicar receta">
           <i class="bi bi-plus-circle-fill" id="publicar"></i>
@@ -54,26 +54,18 @@
         <a href="/EditarPerfil/EditarPerfil.html" class="btn-editar">Editar perfil</a>
       </div>
 
-      <div class="col-md-8"> 
+      <div class="col-md-8">
         <h3 class="titulo-seccion">Mis recetas</h3>
         <hr>
-        <div class="row p-3 mb-3">
-          <div class="col-md-5 card-receta">
-            <img src="../Imagenes/Sopes.jpg" class="img-fluid rounded-top" alt="Platillo 1">
-            <div class="card-body text-center">
-              <h5 class="card-title" style="font-weight: bold;">Sopes</h5>
-              <p class="card-text text-muted">Descripción</p>
-              <hr>
-              <div class="d-flex justify-content-center">
-                <a href="/CrearEditarPublicacion/CrearEditarPublicacion.html" class="btn-editarReceta">Editar</a>
-                <button class="btn-eliminar">Eliminar</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div id="misRecetas" class="row p-3 mb-3"></div>
+
+        <h3 class="titulo-seccion">Recetas guardadas</h3>
+        <hr>
+        <div id="recetasGuardadas" class="row p-3 mb-3"></div>
       </div>
     </div>
   </main>
+
 
   <footer>
     © 2025, PalAntojo
@@ -84,7 +76,7 @@
     if (!user) {
       window.location.href = "/InicioSesion/InicioSesion.html";
     } else {
-      // Navbar
+      
       document.getElementById("nombreNavbar").textContent = user.username ? "@" + user.username : "@nombreUsuario";
       document.getElementById("fotoNavbar").src = user.fotoPerfil || "/Imagenes/default.png";
 
@@ -94,9 +86,63 @@
       document.getElementById("nombreCompleto").textContent = nombreCompleto || "Nombre completo";
       document.getElementById("nombreUsuario").textContent = user.username ? "@" + user.username : "@nombreUsuario";
       document.getElementById("correoUsuario").textContent = user.correo || "correo@ejemplo.com";
-
       document.title = `PalAntojo / @${user.username}`;
-    }
+
+      function crearCardReceta(receta, mostrarAutor = false, esPropia = false) {
+        const card = document.createElement("div");
+        card.classList.add("col-md-5", "card-receta", "mb-3");
+        card.innerHTML = `
+          <img src="${receta.imagen || '../Imagenes/default.png'}" alt="${receta.titulo}">
+          <div class="card-body text-center">
+            <h5 class="card-title" style="font-weight: bold;">${receta.titulo}</h5>
+            <p class="card-text text-muted"><small>${receta.descripcion}</small></p>
+            ${
+              mostrarAutor
+                ? `<small class="text-muted">Publicada por 
+                    <a href="#" class="enlace-autor" data-autor="${receta.autor || 'nombreUsuario'}">
+                      @${receta.autor || 'nombreUsuario'}
+                    </a></small><br>`
+                : ""
+            }
+            <hr>
+            ${
+              esPropia
+                ? `<div class="d-flex justify-content-center">
+                    <a href="/CrearEditarPublicacion/CrearEditarPublicacion.html" class="btn-editarReceta">Editar</a>
+                    <button class="btn-eliminar">Eliminar</button>
+                  </div>`
+                : `<a href="/VerDetalles/VerDetalles.html" class="btn-detalles">Ver más detalles</a>`
+            }
+          </div>
+        `;
+        return card;
+      }
+
+      const misRecetas = [
+      { titulo: "Sopes", descripcion: "Sopes caseros acompañados de salsa", imagen: "../Imagenes/Sopes.jpg" },
+      { titulo: "Tacos", descripcion: "Tacos con salsa, aguacate y cebolla morada", imagen: "../Imagenes/Tacos.jpg" }
+      ];
+
+      const guardadas = [
+        { titulo: "Mole con arroz", descripcion: "Mole tradicional", imagen: "../Imagenes/Mole con arroz.jpg", autor: "Juan" }
+      ];
+
+      const contMis = document.getElementById("misRecetas");
+      const contGuardadas = document.getElementById("recetasGuardadas");
+
+      misRecetas.forEach(r => contMis.appendChild(crearCardReceta(r, false, true)));
+      guardadas.forEach(r => contGuardadas.appendChild(crearCardReceta(r, true, false)));
+
+    // Busqueda
+    const searchForm = document.getElementById("searchForm");
+    const searchInput = document.getElementById("searchInput");
+    searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const query = searchInput.value.trim();
+      if (!query) return;
+      window.location.href = `/PaginaPrincipal/PaginaPrincipal.html?q=${encodeURIComponent(query)}`;
+    });    
+  }
   </script>
 </body>
 </html>
