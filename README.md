@@ -11,13 +11,11 @@
 * Los usuarios pueden publicar recetas, así como ver las de otros usuarios para replicar el platillo, si gusta puede calificar y/o dejar un comentario de dicho platillo en la página.  
 * El usuario puede guardar recetas de su interés y las podrá visualizar en su perfil. También se podrán visualizar las recetas que ha publicado, a su vez podrá editarlas o eliminarlas.  
 
-**Descripción de las carpetas contenidas:**  
+## Carpetas 
 - node_modules: contiene todos los archivos de Node.js  
 - public: contiene lo relacionado a las páginas y su diseño, cada una con su propia carpeta.  
 - uploads: para las imagenes subidas por los usuarios  
 
-
-**Instrucciones de ejecución**  
 ## Requisitos previos  
 - Node.js instalado  
 - MySQL Workbench  
