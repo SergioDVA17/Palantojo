@@ -1,0 +1,118 @@
+.page-wrapper {
+  background-color: #dbe2bb;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  padding-bottom: 40px;
+}
+
+.page-wrapper .main-container {
+  background-color: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #da2627;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.section-title {
+  color: #da2627;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.image-upload {
+  border: 2px dashed #da2627;
+  border-radius: 10px;
+  padding: 25px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.3s;
+}
+
+.image-upload:hover {
+  background-color: #e3e3e3;
+}
+
+.upload-icon {
+  font-size: 20px;
+  color: #da2627;
+  margin-bottom: 10px;
+}
+
+.form-control {
+  border-radius: 10px;
+  border: 1px solid #da2627;
+  padding: 10px 15px;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.2rem rgba(218, 38, 39, 0.25);
+  border-color: #da2627;
+}
+
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.btn-action {
+  border-radius: 10px;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  border: none;
+  margin: 0 2px 0 2px;
+}
+
+.btn-publish-action {
+  background-color: #da2627;
+  color: white;
+  font-weight: bold;
+  padding: 8px 15px;
+}
+
+.btn-publish-action:hover {
+  background-color: #c71b1b;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.btn-cancel {
+  background-color: #222222;
+  color: white;
+  font-weight: bold;
+  padding: 8px 15px;
+}
+
+.btn-cancel:hover {
+  background-color: #000000;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+footer {
+  margin-top: 50px;
+  text-align: center;
+  justify-content: center;
+  color: #2e0a0a;
+  font-size: 10px;
+}
+
+select.form-control {
+  background-color: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 20px;
+  height: 48px;   
+  line-height: 24px;   
+  padding-right: 45px;  
+  font-size: 16px; 
+  color: #333;         
+}

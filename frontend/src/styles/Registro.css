@@ -1,0 +1,160 @@
+.registro-page {    
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background-color: #dbe2bb; 
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.registro-page h1 {
+    margin: 20px 0 0 0;
+    text-align: center;
+    color: #da2627;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.registro-page  a{
+    color: #da2627;
+}
+
+.registro-page h1 a:hover {
+    color: #d63838;
+    text-decoration: none;
+}
+
+.registro-page .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px auto; 
+    max-width: 700px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8); 
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    flex: 1;
+    min-width: 350px;
+    padding: 10px;
+}
+
+form input,
+form select,
+form button {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #da2627;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+form input {
+    border-color: #da2627 !important;
+}
+
+form label {
+    font-size: 13px;
+    margin-bottom: 4px;
+    display: block;
+}
+
+form button {
+    background-color: #da2627;
+    color: white;
+    cursor: pointer;
+    width: 270px;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+form button:hover {
+    background-color: #c71b1b;
+    color: white;
+    cursor: pointer;
+    width: 270px;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.login {
+    color: black;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    width: 100%;
+}
+
+.login a {
+    text-decoration: none;
+    color: rgb(117, 113, 113);
+}
+
+.login a:hover {
+    color: #da2627;
+    text-decoration: underline;
+}
+
+.imagen {
+    flex: 1;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    padding: 10px;
+}
+
+.imagen img {
+    max-width: 100%;
+    height: auto;
+}
+
+.preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+
+footer {
+    text-align: center;
+    color: #2e0a0a;
+    font-size: 10px;
+    margin-top: 20px;
+}
+
+/*..........MENSAJES.............*/
+.swal2-popup {
+  font-size: 14px !important; 
+  border-radius: 1rem !important; 
+  padding: 1.2em !important;
+  width: 340px !important;
+}
+
+.swal2-title {
+  font-size: 1.1rem !important;
+  font-weight: 600;
+}
+
+.swal2-html-container {
+  font-size: 0.9rem !important;
+}
+
+.swal2-confirm {
+  background-color: #da2627 !important; 
+  border: none !important;
+  border-radius: 0.5rem !important;
+  padding: 0.5em 1.5em !important;
+  border-color: none;
+}
+
+.swal2-confirm:hover {
+  background-color: #d63838 !important;
+  border: none !important;
+  border-color: none;
+}

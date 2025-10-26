@@ -204,24 +204,98 @@ app.get('/api/search/users', (req, res) => {
 });
 
 // ---------- RUTA PARA OBTENER UN USUARIO POR ID ----------
-app.get('/users/:id', (req, res) => {
-	const { id } = req.params;
-	db.query(
-		'SELECT id, nombres, apellidos, correo, username, fotoPerfil FROM users WHERE id = ?',
-		[id],
-		(err, results) => {
-			if (err) return res.status(500).json({ message: 'Error en la base de datos', err });
-			if (results.length === 0) return res.status(404).json({ message: 'Usuario no encontrado' });
-			res.json(results[0]);
-		}
-	);
+app.get('/api/users/by-username/:username', (req, res) => {
+  const { username } = req.params;
+  db.query(
+    'SELECT id, nombres, apellidos, correo, username, fotoPerfil FROM users WHERE username = ?',
+    [username],
+    (err, results) => {
+      if (err) return res.status(500).json({ message: 'Error en DB', err });
+      if (results.length === 0) return res.status(404).json({ message: 'Usuario no encontrado' });
+      res.json(results[0]);
+    }
+  );
 });
 
-// ---------- RUTA PARA OBTENER LA RECETA MEJOR CALIFICADA DE UN USUARIO ----------
-app.get('/api/user/:id/top-recipe', (req, res) => {
-	const { id } = req.params;
+// ==========================================================
 
-	const query = `
+// ---------- RUTA PARA CREAR RECETA ----------
+app.post("/api/recetas", upload.single("imagen"), (req, res) => {
+  const { id_usuario, nombre_platillo, descripcion, ingredientes, instrucciones, estado } = req.body;
+
+  if (!id_usuario || !nombre_platillo || !ingredientes || !instrucciones || !estado) {
+    return res.status(400).json({ message: "Todos los campos obligatorios deben estar completos" });
+  }
+
+  const urlImagen = req.file ? "/uploads/" + req.file.filename : "/Imagenes/default.png";
+
+  const query = `
+    INSERT INTO Recetas (id_usuario, id_estado, nombre_platillo, descripcion, ingredientes, instrucciones)
+    VALUES (?, (SELECT id_estado FROM Estados WHERE nombre_estado = ?), ?, ?, ?, ?)
+  `;
+
+  db.query(query, [id_usuario, estado, nombre_platillo, descripcion, ingredientes, instrucciones], (err, result) => {
+    if (err) return res.status(500).json({ message: "Error al crear receta", err });
+    const id_receta = result.insertId;
+
+    if (req.file) {
+      db.query(
+        "INSERT INTO Imagenes (id_receta, url_imagen) VALUES (?, ?)",
+        [id_receta, urlImagen],
+        (err2) => {
+          if (err2) console.error("Error al guardar imagen:", err2);
+        }
+      );
+    }
+
+    res.status(201).json({ message: "Receta creada correctamente", id_receta });
+  });
+});
+
+// ---------- RUTA PARA ACTUALIZAR RECETA ----------
+app.post("/api/recetas/:id", upload.single("imagen"), (req, res) => {
+  const { id } = req.params;
+  const { nombre_platillo, descripcion, ingredientes, instrucciones, estado } = req.body;
+
+  if (!nombre_platillo && !descripcion && !ingredientes && !instrucciones && !estado && !req.file) {
+    return res.status(400).json({ message: "No hay cambios para actualizar" });
+  }
+
+  const updates = [];
+  const values = [];
+
+  if (nombre_platillo) { updates.push("nombre_platillo = ?"); values.push(nombre_platillo); }
+  if (descripcion) { updates.push("descripcion = ?"); values.push(descripcion); }
+  if (ingredientes) { updates.push("ingredientes = ?"); values.push(ingredientes); }
+  if (instrucciones) { updates.push("instrucciones = ?"); values.push(instrucciones); }
+  if (estado) { updates.push("id_estado = (SELECT id_estado FROM Estados WHERE nombre_estado = ?)"); values.push(estado); }
+
+  values.push(id);
+  const query = `UPDATE Recetas SET ${updates.join(", ")} WHERE id_receta = ?`;
+
+  db.query(query, values, (err) => {
+    if (err) return res.status(500).json({ message: "Error al actualizar receta", err });
+
+    if (req.file) {
+      const urlImagen = "/uploads/" + req.file.filename;
+      db.query(
+        "UPDATE Imagenes SET url_imagen = ? WHERE id_receta = ?",
+        [urlImagen, id],
+        (err2) => {
+          if (err2) console.error("Error al actualizar imagen:", err2);
+        }
+      );
+    }
+
+    res.json({ message: "Receta actualizada correctamente" });
+  });
+});
+
+// ---------- RUTA PARA OBTENER LA RECETA MEJOR CALIFICADA DE UN USUARIO (RECETA DESTACADA) ----------
+app.get('/api/user/:id/top-recipe', (req, res) => {
+  const { id } = req.params;
+
+  const query = `
     SELECT 
       r.id_receta,
       r.nombre_platillo,
@@ -229,9 +303,12 @@ app.get('/api/user/:id/top-recipe', (req, res) => {
       r.id_estado,
       e.nombre_estado,
       i.url_imagen,
-      AVG(c.calificacion) as promedio_calificacion,
-      COUNT(c.calificacion) as total_calificaciones
+      u.username AS autor,
+      u.fotoPerfil AS autor_foto,
+      AVG(c.calificacion) AS promedio_calificacion,
+      COUNT(c.calificacion) AS total_calificaciones
     FROM Recetas r
+    JOIN users u ON r.id_usuario = u.id
     LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
     LEFT JOIN Imagenes i ON r.id_receta = i.id_receta
     LEFT JOIN Estados e ON r.id_estado = e.id_estado
@@ -241,27 +318,29 @@ app.get('/api/user/:id/top-recipe', (req, res) => {
     LIMIT 1
   `;
 
-	db.query(query, [id], (err, results) => {
-		if (err) {
-			console.error('Error al obtener receta mejor calificada:', err);
-			return res.status(500).json({ message: 'Error en la base de datos', err });
-		}
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error('Error al obtener receta mejor calificada:', err);
+      return res.status(500).json({ message: 'Error en la base de datos', err });
+    }
 
-		if (results.length === 0) {
-			return res.json(null); // No hay recetas
-		}
+    if (results.length === 0) {
+      return res.json(null);
+    }
 
-		const receta = results[0];
-		res.json({
-			id: receta.id_receta,
-			titulo: receta.nombre_platillo,
-			descripcion: receta.descripcion,
-			estado: receta.nombre_estado,
-			imagen: receta.url_imagen || '/Imagenes/default.png',
-			promedioCalificacion: receta.promedio_calificacion || 0,
-			totalCalificaciones: receta.total_calificaciones || 0
-		});
-	});
+    const receta = results[0];
+    res.json({
+      id: receta.id_receta,
+      titulo: receta.nombre_platillo,
+      descripcion: receta.descripcion,
+      estado: receta.nombre_estado,
+      autor: receta.autor,                  
+      autor_foto: receta.autor_foto,        
+      imagen: receta.url_imagen || '/Imagenes/default.png',
+      promedioCalificacion: receta.promedio_calificacion || 0,
+      totalCalificaciones: receta.total_calificaciones || 0
+    });
+  });
 });
 
 // ---------- RUTA PARA OBTENER EL RATING PROMEDIO DE UN USUARIO ----------
@@ -312,6 +391,7 @@ const PORT = 3000;
 app.listen(PORT, () =>
 	console.log(`Servidor escuchando en http://localhost:${PORT}`)
 );
+
 // ---------- RUTA PARA OBTENER LA RECETA MÁS COMENTADA ----------
 app.get('/api/reportes/receta-mas-comentada', (req, res) => {
 	const query = `
@@ -404,4 +484,46 @@ app.get('/api/reportes/top-usuarios-recetas', (req, res) => {
 
 		res.json(usuarios);
 	});
+});
+
+// ---------- RUTA PARA OBTENER UNA RECETA POR ID ----------
+app.get("/api/receta/:id", (req, res) => {
+  const { id } = req.params;
+
+  const query = `
+    SELECT 
+      r.id_receta,
+      r.nombre_platillo,
+      r.descripcion,
+      r.id_estado,
+      e.nombre_estado,
+      u.username AS autor,
+      u.fotoPerfil AS autor_foto,
+      i.url_imagen,
+      AVG(c.calificacion) AS promedio_calificacion
+    FROM Recetas r
+    JOIN users u ON r.id_usuario = u.id
+    LEFT JOIN Imagenes i ON r.id_receta = i.id_receta
+    LEFT JOIN Estados e ON r.id_estado = e.id_estado
+    LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
+    WHERE r.id_receta = ?
+    GROUP BY r.id_receta, r.nombre_platillo, r.descripcion, r.id_estado, e.nombre_estado, u.username, u.fotoPerfil, i.url_imagen
+  `;
+
+  db.query(query, [id], (err, results) => {
+    if (err) return res.status(500).json({ message: "Error en la base de datos", err });
+    if (results.length === 0) return res.status(404).json({ message: "Receta no encontrada" });
+
+    const r = results[0];
+    res.json({
+      id: r.id_receta,
+      titulo: r.nombre_platillo,
+      descripcion: r.descripcion,
+      estado: r.nombre_estado || "Sin estado",
+      autor: r.autor,
+      autor_foto: r.autor_foto,
+      imagen: r.url_imagen || "/Imagenes/default.png",
+      promedioCalificacion: parseFloat(r.promedio_calificacion) || 0
+    });
+  });
 });

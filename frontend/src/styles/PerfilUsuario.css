@@ -1,0 +1,182 @@
+.perfil-usuario-body {
+  background-color: #dbe2bb;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  padding-bottom: 40px;
+}
+
+.perfil-usuario-body .perfil-header {
+  display: flex;
+  gap: 25px;
+  background: white;
+  border: 2px solid #da2627;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+  flex-wrap: wrap; /* móvil: se apila */
+  margin-top: 40px;
+}
+
+.perfil-usuario-body .perfil-info {
+  flex: 1;
+  text-align: center;
+  border-right: 2px solid #da2627;
+  padding-right: 20px;
+}
+
+.perfil-usuario-body .foto-de-perfil {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.perfil-info h4 {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.username {
+  font-weight: bold;
+  color: #da2627;
+}
+
+.correo {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.receta-destacada {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.perfil-usuario-body .recetas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.titulo-seccion {
+  color: #da2627;
+  font-weight: bold;
+  margin: 25px 0 10px;
+}
+
+/* === BOTÓN EDITAR PERFIL === */
+.btn-editar {
+  background-color: #e8e8e8;
+  color: black;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+  display: block;
+  margin: 12px auto 0;
+}
+
+.btn-editar:hover {
+  background-color: #d7d7d7;
+}
+
+/* === CARD RECETA === */
+.perfil-usuario-body .card-receta {
+  border-radius: 15px;
+  background: white;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+  border: 2px solid #da2627;
+}
+
+.card-receta:hover {
+  transform: scale(1.02);
+}
+
+.card-receta img {
+  height: 180px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.card-receta .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  padding: 15px;
+}
+
+.botones-receta {
+  justify-content: space-between; 
+  margin-top: 10px;
+}
+
+.botones-receta .btn-editarReceta,
+.botones-receta .btn-eliminarReceta,
+.botones-receta .btn-detalles {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 48%; 
+  max-width: 150px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  background-color: white;
+}
+
+.botones-receta .btn-editarReceta,
+.botones-receta .btn-eliminarReceta {
+  margin: 0 2px 0 2px;
+}
+
+.botones-receta .btn-editarReceta,
+.botones-receta .btn-detalles {
+  color: #da2627;
+  background-color: white;
+  border: 1px solid #da2627;
+}
+
+.btn-editarReceta:hover,
+.btn-detalles:hover {
+  background-color: #da2627;
+  color: white;
+}
+
+.botones-receta .btn-eliminarReceta {
+  background-color: #e8e8e8;
+  color: black;
+  border: 1px solid #e8e8e8;
+}
+
+.botones-receta .btn-eliminarReceta:hover {
+  background-color: #d7d7d7;
+}
+
+.user-rating {
+  display: block;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 8px 10px;
+  display: inline-block;
+  font-size: 0.9rem;
+}
+
+.rating-stars i {
+  margin-right: 2px;
+  font-size: 1.2rem;
+}
+
+.rating-value {
+  font-weight: bold;
+  color: #da2627;
+}

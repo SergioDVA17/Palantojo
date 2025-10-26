@@ -1,0 +1,156 @@
+.ver-detalles-body {
+  background-color: #dbe2bb;
+  font-family: Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+}
+
+.receta-card, .opinion-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  border: 2px solid #da2627; 
+}
+
+.receta-info {
+  display: flex;
+  gap: 20px;
+}
+
+.receta-img {
+  width: 400px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.receta-detalles {
+  flex: 1;
+}
+
+.btn-guardar-receta {
+  background-color: #da2627;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  margin-left: auto;
+  display: block;
+  font-weight: bold;
+}
+
+.btn-guardar-receta:hover {
+  background-color: #c71b1b;
+}
+
+.stars {
+  font-size: 22px;
+  color: gold;
+}
+
+.btn-comentar {
+  background-color: #da2627;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-top: 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  margin-left: auto;
+  display: block;
+  font-weight: bold;
+}
+
+.btn-comentar:hover {
+  background-color:#c71b1b;
+}
+
+.comentario {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 15px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 10px 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.comentario-img {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.comentario-texto {
+  flex: 1;
+}
+
+.comentario-usuario {
+  margin: 0;
+  font-weight: bold;
+  color: #222;
+}
+
+.comentario-usuario small {
+  color: #888;
+  margin-left: 5px;
+  font-weight: normal;
+  text-decoration: underline;
+}
+
+.comentario-contenido {
+  margin: 3px 0 0;
+  color: #333;
+  line-height: 1.3;
+}
+
+footer {
+    margin-top: 50px;
+    text-align: center;
+    justify-content: center;
+    color: #2e0a0a;
+    font-size: 10px;
+}
+
+.swal2-popup {
+  font-size: 14px !important; 
+  border-radius: 1rem !important; 
+  padding: 1.2em !important;
+  width: 340px !important;
+}
+
+.swal2-title {
+  font-size: 1.1rem !important;
+  font-weight: 600;
+}
+
+.swal2-html-container {
+  font-size: 0.9rem !important;
+}
+
+.swal2-confirm {
+  background-color: #da2627 !important; 
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 0.5em 1.5em !important;
+}
+
+.swal2-confirm:hover {
+  background-color: #c71b1b !important;
+  border: none !important;
+  border-color: none;
+}
+
+.swal2-cancel {
+  border: none !important;
+  border-radius: 0.5rem !important;
+  padding: 0.5em 1.5em !important;
+  border-color: none;
+}
