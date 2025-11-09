@@ -22,14 +22,16 @@
 
 .receta-img {
   width: 400px;
-  max-width: 100%;
-  height: auto;
+  height: 450px;
   border-radius: 12px;
   object-fit: cover;
 }
 
 .receta-detalles {
   flex: 1;
+  max-height: 450px;
+  overflow-y: auto;
+  padding-right: 10px;
 }
 
 .btn-guardar-receta {
@@ -46,6 +48,14 @@
 
 .btn-guardar-receta:hover {
   background-color: #c71b1b;
+}
+
+.btn-guardar-receta.guardada {
+  background-color: #2ecc71 !important;
+}
+
+.btn-guardar-receta.guardada:hover {
+  background-color: #27ae60 !important;
 }
 
 .stars {
@@ -153,4 +163,12 @@ footer {
   border-radius: 0.5rem !important;
   padding: 0.5em 1.5em !important;
   border-color: none;
+}
+
+.autor-link {
+  color: #da2627;
+}
+
+.autor-link:hover {
+  cursor: pointer;
 }

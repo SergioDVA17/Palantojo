@@ -27,16 +27,75 @@ const VerDetalles = () => {
   }, [navigate]);
 
   useEffect(() => {
-    const fetchReceta = async () => {
+  const fetchReceta = async () => {
+    try {
+      const res = await axios.get(`http://localhost:3000/api/recetas/${id}`, {
+        params: { idUsuario: sessionUser?.id || null },
+      });
+      setReceta(res.data);
+      if (res.data.miCalificacion) setMiCalificacion(res.data.miCalificacion);
+    } catch (err) {
+      console.error("Error al obtener receta:", err);
+    }
+  };
+
+    if (sessionUser) {
+      fetchReceta();
+    }
+  }, [id, sessionUser]);
+
+  useEffect(() => {
+    if (!sessionUser) return;
+
+    const verificarGuardada = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/recetas/${id}`);
-        setReceta(res.data);
+        const { data } = await axios.get(
+          `http://localhost:3000/api/recetas/${id}/guardada/${sessionUser.id}`
+        );
+        setGuardada(data.guardada === true);
       } catch (err) {
-        console.error("Error al obtener receta:", err);
+        console.error("Error al verificar receta guardada:", err);
+        setGuardada(false);
       }
     };
-    fetchReceta();
-  }, [id]);  
+
+    verificarGuardada();
+  }, [sessionUser, id]);
+
+  const handleGuardarReceta = async () => {
+    if (!sessionUser) return;
+
+    try {
+      setGuardada((prev) => !prev);
+
+      if (guardada) {
+        await axios.delete(`http://localhost:3000/api/recetas/${id}/guardar`, {
+          data: { id_usuario: sessionUser.id },
+        });
+        Swal.fire({
+          title: "Se borró de recetas guardadas",
+          icon: "info",
+          timer: 2000,
+          confirmButtonColor: "#da2627",
+        });
+      } else {
+        await axios.post(`http://localhost:3000/api/recetas/${id}/guardar`, {
+          id_usuario: sessionUser.id,
+        });
+        Swal.fire({
+          title: "¡Receta guardada!",
+          icon: "success",
+          timer: 2000,
+          confirmButtonColor: "#da2627",
+        });
+      }
+    } catch (err) {
+      console.error("Error al guardar/eliminar receta:", err);
+      // Revertimos si el request falla
+      setGuardada((prev) => !prev);
+      Swal.fire("Error", "No se pudo procesar la acción", "error");
+    }
+  };
 
   useEffect(() => {
       const fetchComentarios = async () => {
@@ -49,26 +108,6 @@ const VerDetalles = () => {
       };
       fetchComentarios();
   }, [id]);
-
-  const handleGuardarReceta = async () => {
-      if (guardada) return;
-
-      try {
-        await axios.post(`http://localhost:3000/api/recetas/${id}/guardar`, {
-          id_usuario: sessionUser.id,
-        });
-        setGuardada(true);
-        Swal.fire({
-          title: "¡Receta guardada!",
-          icon: "success",
-          timer: 2000,
-          confirmButtonColor: "#da2627",
-        });
-      } catch (err) {
-        console.error("Error al guardar receta:", err);
-        Swal.fire("Error", "No se pudo guardar la receta", "error");
-      }
-  };   
   
   const handleRate = async (valor) => {
     if (!sessionUser || receta?.id_usuario === sessionUser.id) return;
@@ -92,7 +131,7 @@ const VerDetalles = () => {
     try {
       await axios.post(`http://localhost:3000/api/recetas/${id}/comentarios`, {
         id_usuario: sessionUser.id,
-        contenido: comentarioTexto,
+        comentario: comentarioTexto,
       });
 
       setComentarios([
@@ -107,9 +146,16 @@ const VerDetalles = () => {
     }
   };
   
-  if (!receta) return <div>Cargando...</div>;
+  if (!receta) {
+    return (
+      <div className="ver-detalles-body">
+        <Navbar user={sessionUser} />
+        <div className="text-center mt-5">Cargando receta...</div>
+      </div>
+    );
+  }
 
-  const esPropia = sessionUser && receta.id_usuario === sessionUser.id;
+  const esPropia = sessionUser && receta.id_usuario_autor === sessionUser.id;
 
   return (
     <div className="ver-detalles-body">
@@ -120,19 +166,26 @@ const VerDetalles = () => {
       <div className="container mt-5">
         <div className="receta-card">
           <div className="receta-info">
-            <img src={receta.imagen} alt="Platillo" className="receta-img" />
+            <img
+              src={`http://localhost:3000${receta.imagen}`}
+              alt="Platillo"
+              className="receta-img"
+            />
             <div className="receta-detalles">
-              <h3>{receta.titulo}</h3>
+              <h3 style={{ fontWeight: "bold" }}>{receta.titulo}</h3>
+
               <p>
                 <strong>Receta publicada por: </strong>
                 <span
                   className="autor-link"
-                  onClick={() => navigate(`/perfil/${receta.id_usuario}`)}
+                  onClick={() => navigate(`/usuario/${receta.autor}`)}
                 >
-                  {receta.autor}
+                  @{receta.autor}
                 </span>
               </p>
+
               <p><strong>Estado:</strong> {receta.estado}</p>
+
               <p><strong>Descripción:</strong> {receta.descripcion}</p>
 
               <p><strong>Ingredientes:</strong></p>
@@ -171,7 +224,10 @@ const VerDetalles = () => {
 
         <div className="opinion-card">
           <h4>Calificar:</h4>
-          <RatingStars rating={receta.promedioCalificacion} onRate={handleRate} />
+          <RatingStars
+            rating={miCalificacion !== null ? miCalificacion : receta.promedioCalificacion}
+            onRate={!esPropia ? handleRate : undefined}
+          />
 
           {!esPropia && (
             <>

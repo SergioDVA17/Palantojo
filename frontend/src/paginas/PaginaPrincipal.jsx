@@ -5,8 +5,7 @@ import CardRecetaPopular from "../componentes/CardRecetaPopular";
 import CardChef from "../componentes/CardChef";
 import CardUser from "../componentes/CardUser";
 import "../styles/PaginaPrincipal.css";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const PaginaPrincipal = () => {
   const navigate = useNavigate();

@@ -18,15 +18,15 @@ const PerfilUsuario = () => {
 
   // ===== ESTRELLAS =====       
   const getStarColor = (index, rating) => {
-    if (!rating || rating === 0) return "text-secondary";
+    if (!rating || rating === 0) return "text-secondary"; 
     const full = Math.floor(rating);
     if (index < full) {
-      if (rating <= 2) return "text-primary";
-      if (rating <= 3.5) return "text-purple";
+      if (rating <= 2) return "text-primary"; 
+      if (rating <= 3.5) return "text-success";
       return "text-warning";
     } else if (index < rating) {
       if (rating <= 2) return "text-primary";
-      if (rating <= 3.5) return "text-purple";
+      if (rating <= 3.5) return "text-success";
       return "text-warning";
     }
     return "text-secondary";
