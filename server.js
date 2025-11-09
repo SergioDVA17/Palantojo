@@ -300,6 +300,37 @@ app.post("/api/recetas", upload.single("imagen"), (req, res) => {
   );
 });
 
+app.get('/api/recetas/search', (req, res) => {
+  const { q } = req.query;
+  if (!q || q.trim() === '') return res.json([]);
+
+  const term = `%${q}%`;
+  const query = `
+    SELECT 
+      r.id_receta,
+      r.nombre_platillo,
+      r.descripcion,
+      e.nombre_estado,
+      u.username AS autor,
+      COALESCE(u.fotoPerfil, '/uploads/default.png') AS autor_foto,
+      i.url_imagen,
+      COALESCE(ROUND(AVG(c.calificacion), 1), 0) AS promedio_calificacion
+    FROM Recetas r
+    JOIN users u ON r.id_usuario = u.id
+    LEFT JOIN Estados e ON r.id_estado = e.id_estado
+    LEFT JOIN Imagenes i ON r.id_receta = i.id_receta
+    LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
+    WHERE r.nombre_platillo LIKE ? OR e.nombre_estado LIKE ? OR u.username LIKE ?
+    GROUP BY r.id_receta
+    ORDER BY r.fecha_publicacion DESC;
+  `;
+
+  db.query(query, [term, term, term], (err, results) => {
+    if (err) return res.status(500).json({ message: "Error en la búsqueda", err });
+    res.json(results);
+  });
+});
+
 // Actualizar receta
 app.put("/api/recetas/:id", upload.single("imagen"), (req, res) => {
   const { id } = req.params;
@@ -451,33 +482,6 @@ app.delete("/api/recetas/:id", (req, res) => {
   eliminarAsociados();
 });
  
-app.get('/api/recetas/search', (req, res) => {
-  const { q } = req.query;
-  if (!q || q.trim() === '') {
-    return res.status(400).json({ message: "Debe ingresar un término de búsqueda" });
-  }
-
-  const term = `%${q}%`;
-  const query = `
-    SELECT 
-      r.id_receta, r.nombre_platillo, r.descripcion,
-      e.nombre_estado, u.username AS autor, u.fotoPerfil AS autor_foto,
-      i.url_imagen, AVG(c.calificacion) AS promedio_calificacion
-    FROM Recetas r
-    JOIN users u ON r.id_usuario = u.id
-    LEFT JOIN Estados e ON r.id_estado = e.id_estado
-    LEFT JOIN Imagenes i ON r.id_receta = i.id_receta
-    LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
-    WHERE r.nombre_platillo LIKE ? OR e.nombre_estado LIKE ? OR u.username LIKE ?
-    GROUP BY r.id_receta
-  `;
-
-  db.query(query, [term, term, term], (err, results) => {
-    if (err) return res.status(500).json({ message: "Error en la búsqueda", err });
-    res.json(results);
-  });
-});
-
 // Todas las recetas
 app.get('/api/recetas', (req, res) => {
   const query = `
