@@ -155,7 +155,7 @@ const VerDetalles = () => {
     );
   }
 
-  const esPropia = sessionUser && receta.id_usuario_autor === sessionUser.id;
+  const esPropia = sessionUser && receta.id_usuario === sessionUser.id;
 
   return (
     <div className="ver-detalles-body">
