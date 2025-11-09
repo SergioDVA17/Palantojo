@@ -10,7 +10,7 @@ import "../styles/VerDetalles.css";
 const VerDetalles = () => {
   const navigate = useNavigate();
   const [sessionUser, setSessionUser] = useState(null);
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [receta, setReceta] = useState(null);
   const [comentarios, setComentarios] = useState([]);
   const [comentarioTexto, setComentarioTexto] = useState("");
@@ -18,30 +18,28 @@ const VerDetalles = () => {
   const [guardada, setGuardada] = useState(false);
 
   useEffect(() => {
-  const storedUser = JSON.parse(sessionStorage.getItem("user"));
-  if (!storedUser) {
-    navigate("/");
-    return;
-  }
-  setSessionUser(storedUser);
+    const storedUser = JSON.parse(sessionStorage.getItem("user"));
+    if (!storedUser) {
+      navigate("/");
+      return;
+    }
+    setSessionUser(storedUser);
   }, [navigate]);
 
   useEffect(() => {
-  const fetchReceta = async () => {
-    try {
-      const res = await axios.get(`http://localhost:3000/api/recetas/${id}`, {
-        params: { idUsuario: sessionUser?.id || null },
-      });
-      setReceta(res.data);
-      if (res.data.miCalificacion) setMiCalificacion(res.data.miCalificacion);
-    } catch (err) {
-      console.error("Error al obtener receta:", err);
-    }
-  };
+    const fetchReceta = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3000/api/recetas/${id}`, {
+          params: { idUsuario: sessionUser?.id || null },
+        });
+        setReceta(res.data);
+        if (res.data.miCalificacion) setMiCalificacion(res.data.miCalificacion);
+      } catch (err) {
+        console.error("Error al obtener receta:", err);
+      }
+    };
 
-    if (sessionUser) {
-      fetchReceta();
-    }
+    if (sessionUser) fetchReceta();
   }, [id, sessionUser]);
 
   useEffect(() => {
@@ -91,24 +89,52 @@ const VerDetalles = () => {
       }
     } catch (err) {
       console.error("Error al guardar/eliminar receta:", err);
-      // Revertimos si el request falla
       setGuardada((prev) => !prev);
       Swal.fire("Error", "No se pudo procesar la acción", "error");
     }
   };
 
-  useEffect(() => {
-      const fetchComentarios = async () => {
+  const handleEliminarReceta = async () => {
+    Swal.fire({
+      title: "¿Eliminar receta?",
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#da2627",
+      cancelButtonColor: "#626a71",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
         try {
-          const res = await axios.get(`http://localhost:3000/api/recetas/${id}/comentarios`);
-          setComentarios(res.data);
+          await axios.delete(`http://localhost:3000/api/recetas/${receta.id_receta || id}`);
+          Swal.fire({
+            title: "Receta eliminada",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          navigate("/PaginaPrincipal");
         } catch (err) {
-          console.error("Error al obtener comentarios:", err);
+          console.error("Error al eliminar receta:", err);
+          Swal.fire("Error", "No se pudo eliminar la receta", "error");
         }
-      };
-      fetchComentarios();
+      }
+    });
+  };
+
+  useEffect(() => {
+    const fetchComentarios = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3000/api/recetas/${id}/comentarios`);
+        setComentarios(res.data);
+      } catch (err) {
+        console.error("Error al obtener comentarios:", err);
+      }
+    };
+    fetchComentarios();
   }, [id]);
-  
+
   const handleRate = async (valor) => {
     if (!sessionUser || receta?.id_usuario === sessionUser.id) return;
     setMiCalificacion(valor);
@@ -145,7 +171,7 @@ const VerDetalles = () => {
       Swal.fire("Error", "No se pudo publicar el comentario", "error");
     }
   };
-  
+
   if (!receta) {
     return (
       <div className="ver-detalles-body">
@@ -163,6 +189,7 @@ const VerDetalles = () => {
         user={sessionUser}
         onSearchChange={(q) => navigate(`/PaginaPrincipal?q=${encodeURIComponent(q)}`)}
       />
+
       <div className="container mt-5">
         <div className="receta-card">
           <div className="receta-info">
@@ -185,7 +212,6 @@ const VerDetalles = () => {
               </p>
 
               <p><strong>Estado:</strong> {receta.estado}</p>
-
               <p><strong>Descripción:</strong> {receta.descripcion}</p>
 
               <p><strong>Ingredientes:</strong></p>
@@ -195,26 +221,37 @@ const VerDetalles = () => {
                 ))}
               </ul>
 
-              <p><strong>Instruciones:</strong></p>
+              <p><strong>Instrucciones:</strong></p>
               <ol>
                 {receta.instrucciones?.split("\n").map((inst, i) => (
                   <li key={i}>{inst}</li>
                 ))}
               </ol>
 
-              {!esPropia && (
+              {esPropia ? (
+                <div className="botones-autor mt-3">
+                  <button
+                    className="btn-editarReceta" id="btn-Edit"
+                    onClick={() => navigate(`/CrearEditarReceta/${receta.id_receta || id}`)}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className="btn-eliminarReceta" id="btn-Elim"
+                    onClick={handleEliminarReceta}
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              ) : (
                 <button
                   className={`btn-guardar-receta ${guardada ? "guardada" : ""}`}
                   onClick={handleGuardarReceta}
                 >
                   {guardada ? (
-                    <>
-                      <i className="bi bi-bookmark-check-fill" title="Guardar receta"></i>
-                    </>
+                    <i className="bi bi-bookmark-check-fill" title="Guardada"></i>
                   ) : (
-                    <>
-                      <i className="bi bi-bookmark"></i>
-                    </>
+                    <i className="bi bi-bookmark"></i>
                   )}
                 </button>
               )}
@@ -223,11 +260,22 @@ const VerDetalles = () => {
         </div>
 
         <div className="opinion-card">
-          <h4>Calificar:</h4>
-          <RatingStars
-            rating={miCalificacion !== null ? miCalificacion : receta.promedioCalificacion}
-            onRate={!esPropia ? handleRate : undefined}
-          />
+          {esPropia ? (
+            <div className="calific">
+            <h4>
+              Calificación promedio:{" "}
+              <strong id="calific">{parseFloat(receta.promedioCalificacion || 0).toFixed(1)}</strong> <i id="calific" className="bi bi-star-fill"></i>
+            </h4>
+            </div>
+          ) : (
+            <>
+              <h4>Calificar:</h4>
+              <RatingStars
+                rating={miCalificacion !== null ? miCalificacion : receta.promedioCalificacion}
+                onRate={!esPropia ? handleRate : undefined}
+              />
+            </>
+          )}
 
           {!esPropia && (
             <>
