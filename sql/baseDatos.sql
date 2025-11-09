@@ -74,7 +74,24 @@ CREATE TABLE Recetas_Guardadas (
     UNIQUE (id_usuario, id_receta) -- no duplicar guardados
 );
 
--- Verificar que todo se creó correctamente
+ALTER TABLE Recetas ADD COLUMN promedio_calificacion DECIMAL(3,2) DEFAULT 0;
+ALTER TABLE Calificaciones MODIFY calificacion FLOAT;
+
 SHOW TABLES;
+DROP database palan_db;
+
 SELECT * FROM users;
+SELECT * FROM Recetas_Guardadas;
+SELECT * FROM Recetas;
 SELECT * FROM Estados;
+SELECT * FROM Imagenes;
+SELECT * FROM Calificaciones;
+SELECT * FROM Comentarios;
+
+-- INSERTAR ESTADOS
+INSERT INTO Estados (nombre_estado) VALUES 
+('Aguascalientes'), ('Baja California'), ('Baja California Sur'), ('Campeche'), ('Chiapas'), ('Chihuahua'),
+('Ciudad de México'), ('Coahuila'), ('Colima'), ('Durango'), ('Estado de México'), ('Guanajuato'), ('Guerrero'),
+('Hidalgo'), ('Jalisco'), ('Michoacán'), ('Morelos'), ('Nayarit'), ('Nuevo León'), ('Oaxaca'), ('Puebla'),
+('Querétaro'), ('Quintana Roo'), ('San Luis Potosí'), ('Sinaloa'), ('Sonora'), ('Tabasco'), ('Tamaulipas'),
+('Tlaxcala'), ('Veracruz'), ('Yucatán'), ('Zacatecas');
