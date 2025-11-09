@@ -42,6 +42,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+// ==========================================================
 //							USUARIOS 
 app.post('/register', upload.single('fotoPerfil'), async (req, res) => {
 	const { nombres, apellidos, correo, username, password } = req.body;
@@ -177,7 +178,6 @@ app.delete('/api/delete-user/:id', (req, res) => {
 	});
 });
 
-// Busqueda
 app.get('/api/search/users', (req, res) => {
 	const search = req.query.q;
 	if (!search || search.trim() === '') {
@@ -208,8 +208,48 @@ app.get('/api/users/by-username/:username', (req, res) => {
   );
 });
 
-// ==========================================================
+// Rating promedio de un usuario 
+app.get('/api/user/:id/rating', (req, res) => {
+	const { id } = req.params;
+
+	const query = `
+    SELECT 
+      AVG(c.calificacion) as rating_promedio,
+      COUNT(DISTINCT r.id_receta) as total_recetas,
+      COUNT(c.calificacion) as total_calificaciones
+    FROM users u
+    LEFT JOIN Recetas r ON u.id = r.id_usuario
+    LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
+    WHERE u.id = ?
+    GROUP BY u.id
+  `;
+
+	db.query(query, [id], (err, results) => {
+		if (err) {
+			console.error('Error al obtener rating del usuario:', err);
+			return res.status(500).json({ message: 'Error en la base de datos', err });
+		}
+
+		if (results.length === 0) {
+			return res.json({
+				rating_promedio: 0,
+				total_recetas: 0,
+				total_calificaciones: 0
+			});
+		}
+
+		const data = results[0];
+		res.json({
+			rating_promedio: parseFloat(data.rating_promedio) || 0,
+			total_recetas: parseInt(data.total_recetas) || 0,
+			total_calificaciones: parseInt(data.total_calificaciones) || 0
+		});
+	});
+});
+
+// ========================================================== 
 //							RECETAS 
+// Obtener los estados
 app.get("/api/estados", (req, res) => {
   db.query("SELECT nombre_estado FROM Estados ORDER BY nombre_estado ASC", (err, results) => {
     if (err) return res.status(500).json({ message: "Error al obtener estados", err });
@@ -217,6 +257,7 @@ app.get("/api/estados", (req, res) => {
   });
 });
 
+// Crear receta
 app.post("/api/recetas", upload.single("imagen"), (req, res) => {
   const { titulo, descripcion, ingredientes, instrucciones, estado, id_usuario } = req.body;
 
@@ -361,6 +402,7 @@ app.get('/api/recetas/usuario/:id', (req, res) => {
   });
 });
 
+// Eliminar receta
 app.delete("/api/recetas/:id", (req, res) => {
   const { id } = req.params;
 
@@ -393,8 +435,6 @@ app.delete("/api/recetas/:id", (req, res) => {
 
   eliminarAsociados();
 });
-
-//----------------------------
 
 // Busqueda
 app.get('/api/recetas/search', (req, res) => {
@@ -507,45 +547,6 @@ app.get('/api/user/:id/top-recipe', (req, res) => {
   });
 });
 
-// Rating promedio de un usuario 
-app.get('/api/user/:id/rating', (req, res) => {
-	const { id } = req.params;
-
-	const query = `
-    SELECT 
-      AVG(c.calificacion) as rating_promedio,
-      COUNT(DISTINCT r.id_receta) as total_recetas,
-      COUNT(c.calificacion) as total_calificaciones
-    FROM users u
-    LEFT JOIN Recetas r ON u.id = r.id_usuario
-    LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
-    WHERE u.id = ?
-    GROUP BY u.id
-  `;
-
-	db.query(query, [id], (err, results) => {
-		if (err) {
-			console.error('Error al obtener rating del usuario:', err);
-			return res.status(500).json({ message: 'Error en la base de datos', err });
-		}
-
-		if (results.length === 0) {
-			return res.json({
-				rating_promedio: 0,
-				total_recetas: 0,
-				total_calificaciones: 0
-			});
-		}
-
-		const data = results[0];
-		res.json({
-			rating_promedio: parseFloat(data.rating_promedio) || 0,
-			total_recetas: parseInt(data.total_recetas) || 0,
-			total_calificaciones: parseInt(data.total_calificaciones) || 0
-		});
-	});
-});
-
 // Receta más comentada
 app.get('/api/reportes/receta-mas-comentada', (req, res) => {
 	const query = `
@@ -638,6 +639,145 @@ app.get('/api/reportes/top-usuarios-recetas', (req, res) => {
 
 		res.json(usuarios);
 	});
+});
+
+// ==========================================================
+//							COMENTARIOS 
+// Añadir comentario
+app.post("/api/recetas/:id/comentarios", (req, res) => {
+  const { id } = req.params;
+  const { id_usuario, contenido } = req.body;
+  if (!id_usuario || !contenido)
+    return res.status(400).json({ message: "Faltan datos" });
+
+  const sql = "INSERT INTO Comentarios (id_receta, id_usuario, contenido) VALUES (?, ?, ?)";
+  db.query(sql, [id, id_usuario, contenido], (err, result) => {
+    if (err) return res.status(500).json({ message: "Error al agregar comentario", err });
+    res.json({ message: "Comentario agregado", id_comentario: result.insertId });
+  });
+});
+
+// Obtener comentarios de una receta
+app.get("/api/recetas/:id/comentarios", (req, res) => {
+  const { id } = req.params;
+  const sql = `
+    SELECT c.id_comentario, c.contenido, c.fecha, 
+           u.username AS usuario, u.foto_perfil AS foto
+    FROM Comentarios c
+    INNER JOIN Usuarios u ON c.id_usuario = u.id_usuario
+    WHERE c.id_receta = ?
+    ORDER BY c.fecha DESC
+  `;
+  db.query(sql, [id], (err, results) => {
+    if (err) return res.status(500).json({ message: "Error al obtener comentarios", err });
+    res.json(results);
+  });
+});
+
+// ==========================================================
+//							CALIFICACIONES
+// Calificar una receta
+app.post("/api/recetas/:id/calificacion", (req, res) => {
+  const { id } = req.params;
+  const { id_usuario, calificacion } = req.body;
+  if (!id_usuario || !calificacion)
+    return res.status(400).json({ message: "Faltan datos" });
+
+  db.query(
+    "SELECT * FROM Calificaciones WHERE id_receta = ? AND id_usuario = ?",
+    [id, id_usuario],
+    (err, results) => {
+      if (err) return res.status(500).json({ message: "Error al verificar calificación", err });
+
+      if (results.length > 0) {
+        // Ya calificó antes => actualizar
+        db.query(
+          "UPDATE Calificaciones SET calificacion = ? WHERE id_receta = ? AND id_usuario = ?",
+          [calificacion, id, id_usuario],
+          (err2) => {
+            if (err2) return res.status(500).json({ message: "Error al actualizar calificación", err2 });
+
+            actualizarPromedioReceta(id, res, "Calificación actualizada");
+          }
+        );
+      } else {
+        db.query(
+          "INSERT INTO Calificaciones (id_receta, id_usuario, calificacion) VALUES (?, ?, ?)",
+          [id, id_usuario, calificacion],
+          (err3) => {
+            if (err3) return res.status(500).json({ message: "Error al guardar calificación", err3 });
+
+            actualizarPromedioReceta(id, res, "Calificación registrada");
+          }
+        );
+      }
+    }
+  );
+});
+
+function actualizarPromedioReceta(id_receta, res, message) {
+  db.query(
+    "SELECT AVG(calificacion) AS promedio FROM Calificaciones WHERE id_receta = ?",
+    [id_receta],
+    (err, results) => {
+      if (err) return res.status(500).json({ message: "Error al calcular promedio", err });
+
+      const promedio = results[0].promedio || 0;
+      db.query(
+        "UPDATE Recetas SET promedio_calificacion = ? WHERE id_receta = ?",
+        [promedio, id_receta],
+        (err2) => {
+          if (err2) return res.status(500).json({ message: "Error al actualizar promedio", err2 });
+          res.json({ message, promedio });
+        }
+      );
+    }
+  );
+}
+
+// ==========================================================
+//							GUARDADOS
+// Guardar una receta
+app.post("/api/recetas/:id/guardar", (req, res) => {
+  const { id } = req.params;
+  const { id_usuario } = req.body;
+
+  if (!id_usuario) return res.status(400).json({ message: "Falta el id_usuario" });
+
+  db.query(
+    "SELECT * FROM RecetasGuardadas WHERE id_receta = ? AND id_usuario = ?",
+    [id, id_usuario],
+    (err, results) => {
+      if (err) return res.status(500).json({ message: "Error al verificar", err });
+
+      if (results.length > 0) {
+        return res.status(400).json({ message: "Ya estaba guardada" });
+      }
+
+      db.query(
+        "INSERT INTO RecetasGuardadas (id_receta, id_usuario) VALUES (?, ?)",
+        [id, id_usuario],
+        (err2) => {
+          if (err2) return res.status(500).json({ message: "Error al guardar receta", err2 });
+          res.json({ message: "Receta guardada correctamente" });
+        }
+      );
+    }
+  );
+});
+
+// Eliminar una receta guardada
+app.delete("/api/recetas/:id/guardar", (req, res) => {
+  const { id } = req.params;
+  const { id_usuario } = req.body;
+  db.query(
+    "DELETE FROM RecetasGuardadas WHERE id_receta = ? AND id_usuario = ?",
+    [id, id_usuario],
+    (err, result) => {
+      if (err) return res.status(500).json({ message: "Error al eliminar receta guardada", err });
+      res.json({ message: "Se elimino de recetas guardadas" });
+    }
+  );
 });
 
 // ---------- RUTA RAÍZ ----------
