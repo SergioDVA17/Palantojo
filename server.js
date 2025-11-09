@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
@@ -13,13 +12,10 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir archivos estáticos desde public
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Servir imágenes subidas
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Conexión a la base de datos
 const db = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
@@ -34,7 +30,6 @@ db.connect(err => {
 	else console.log('✅ Conectado a MySQL');
 });
 
-// Configuración multer para subir fotos
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
 		const dir = './uploads';
@@ -47,6 +42,10 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+
+// ==========================================================
+//							USUARIOS 
+// ==========================================================
 // ---------- RUTA DE REGISTRO ----------
 app.post('/register', upload.single('fotoPerfil'), async (req, res) => {
 	const { nombres, apellidos, correo, username, password } = req.body;
@@ -185,7 +184,7 @@ app.delete('/api/delete-user/:id', (req, res) => {
 	});
 });
 
-// ---------- RUTA PARA OBTENER TODOS LOS USUARIOS ----------
+// ---------- RUTA PARA OBTENER TODOS LOS USUARIOS [BUSQUEDA] ----------
 app.get('/api/search/users', (req, res) => {
 	const search = req.query.q;
 	if (!search || search.trim() === '') {
@@ -218,13 +217,14 @@ app.get('/api/users/by-username/:username', (req, res) => {
 });
 
 // ==========================================================
-
+//							RECETAS 
+// ==========================================================
 // ---------- RUTA PARA CREAR RECETA ----------
 app.post("/api/recetas", upload.single("imagen"), (req, res) => {
-  const { id_usuario, nombre_platillo, descripcion, ingredientes, instrucciones, estado } = req.body;
+  const { titulo, descripcion, ingredientes, instrucciones, estado, id_usuario } = req.body;
 
-  if (!id_usuario || !nombre_platillo || !ingredientes || !instrucciones || !estado) {
-    return res.status(400).json({ message: "Todos los campos obligatorios deben estar completos" });
+  if (!id_usuario || !titulo || !ingredientes || !instrucciones || !estado) {
+    return res.status(400).json({ message: "Todos los campos deben estar completos" });
   }
 
   const urlImagen = req.file ? "/uploads/" + req.file.filename : "/Imagenes/default.png";
@@ -234,11 +234,17 @@ app.post("/api/recetas", upload.single("imagen"), (req, res) => {
     VALUES (?, (SELECT id_estado FROM Estados WHERE nombre_estado = ?), ?, ?, ?, ?)
   `;
 
-  db.query(query, [id_usuario, estado, nombre_platillo, descripcion, ingredientes, instrucciones], (err, result) => {
-    if (err) return res.status(500).json({ message: "Error al crear receta", err });
-    const id_receta = result.insertId;
+  db.query(
+    query,
+    [id_usuario, estado, titulo, descripcion, ingredientes, instrucciones],
+    (err, result) => {
+      if (err) {
+        console.error("Error al crear receta:", err);
+        return res.status(500).json({ message: "Error al crear receta", err });
+      }
 
-    if (req.file) {
+      const id_receta = result.insertId;
+
       db.query(
         "INSERT INTO Imagenes (id_receta, url_imagen) VALUES (?, ?)",
         [id_receta, urlImagen],
@@ -246,10 +252,14 @@ app.post("/api/recetas", upload.single("imagen"), (req, res) => {
           if (err2) console.error("Error al guardar imagen:", err2);
         }
       );
-    }
 
-    res.status(201).json({ message: "Receta creada correctamente", id_receta });
-  });
+      res.status(201).json({
+        message: "La receta se ha publicado",
+        id_receta,
+        urlImagen,
+      });
+    }
+  );
 });
 
 // ---------- RUTA PARA ACTUALIZAR RECETA ----------
@@ -288,6 +298,96 @@ app.post("/api/recetas/:id", upload.single("imagen"), (req, res) => {
     }
 
     res.json({ message: "Receta actualizada correctamente" });
+  });
+});
+
+// ---------- RUTA PARA BUSCAR RECETAS POR NOMBRE, ESTADO O USUARIO ----------
+app.get('/api/recetas/search', (req, res) => {
+  const { q } = req.query;
+  if (!q || q.trim() === '') {
+    return res.status(400).json({ message: "Debe ingresar un término de búsqueda" });
+  }
+
+  const term = `%${q}%`;
+  const query = `
+    SELECT 
+      r.id_receta, r.nombre_platillo, r.descripcion,
+      e.nombre_estado, u.username AS autor, u.fotoPerfil AS autor_foto,
+      i.url_imagen, AVG(c.calificacion) AS promedio_calificacion
+    FROM Recetas r
+    JOIN users u ON r.id_usuario = u.id
+    LEFT JOIN Estados e ON r.id_estado = e.id_estado
+    LEFT JOIN Imagenes i ON r.id_receta = i.id_receta
+    LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
+    WHERE r.nombre_platillo LIKE ? OR e.nombre_estado LIKE ? OR u.username LIKE ?
+    GROUP BY r.id_receta
+  `;
+
+  db.query(query, [term, term, term], (err, results) => {
+    if (err) return res.status(500).json({ message: "Error en la búsqueda", err });
+    res.json(results);
+  });
+});
+
+// ---------- RUTA PARA OBTENER RECETAS DE UN USUARIO ----------
+app.get('/api/recetas/usuario/:id', (req, res) => {
+  const { id } = req.params;
+  const query = `
+    SELECT 
+      r.id_receta, r.nombre_platillo, r.descripcion, e.nombre_estado,
+      i.url_imagen, AVG(c.calificacion) AS promedio_calificacion
+    FROM Recetas r
+    LEFT JOIN Estados e ON r.id_estado = e.id_estado
+    LEFT JOIN Imagenes i ON r.id_receta = i.id_receta
+    LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
+    WHERE r.id_usuario = ?
+    GROUP BY r.id_receta
+    ORDER BY r.fecha_publicacion DESC;
+  `;
+  db.query(query, [id], (err, results) => {
+    if (err) return res.status(500).json({ message: "Error al obtener recetas del usuario", err });
+    res.json(results);
+  });
+});
+
+// ---------- RUTA PARA ELIMINAR UNA RECETA ----------
+app.delete('/api/recetas/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('DELETE FROM Recetas WHERE id_receta = ?', [id], (err, result) => {
+    if (err) return res.status(500).json({ message: "Error al eliminar receta", err });
+    if (result.affectedRows === 0) return res.status(404).json({ message: "Receta no encontrada" });
+    res.json({ message: "Receta eliminada correctamente" });
+  });
+});
+
+// ---------- RUTA PARA OBTENER TODAS LAS RECETAS ----------
+app.get('/api/recetas', (req, res) => {
+  const query = `
+    SELECT 
+      r.id_receta, r.nombre_platillo, r.descripcion, e.nombre_estado,
+      u.username AS autor, u.fotoPerfil AS autor_foto,
+      i.url_imagen, AVG(c.calificacion) AS promedio_calificacion
+    FROM Recetas r
+    JOIN users u ON r.id_usuario = u.id
+    LEFT JOIN Estados e ON r.id_estado = e.id_estado
+    LEFT JOIN Imagenes i ON r.id_receta = i.id_receta
+    LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
+    GROUP BY r.id_receta, e.nombre_estado, u.username, u.fotoPerfil, i.url_imagen
+    ORDER BY r.fecha_publicacion DESC;
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) return res.status(500).json({ message: "Error al obtener recetas", err });
+    res.json(results.map(r => ({
+      id: r.id_receta,
+      titulo: r.nombre_platillo,
+      descripcion: r.descripcion,
+      estado: r.nombre_estado || "Sin estado",
+      autor: r.autor,
+      autor_foto: r.autor_foto,
+      imagen: r.url_imagen || "/Imagenes/default.png",
+      promedioCalificacion: parseFloat(r.promedio_calificacion) || 0
+    })));
   });
 });
 
@@ -381,16 +481,6 @@ app.get('/api/user/:id/rating', (req, res) => {
 		});
 	});
 });
-
-// ---------- RUTA RAÍZ ----------
-app.get('/', (req, res) => {
-	res.send('Servidor funcionando');
-});
-
-const PORT = 3000;
-app.listen(PORT, () =>
-	console.log(`Servidor escuchando en http://localhost:${PORT}`)
-);
 
 // ---------- RUTA PARA OBTENER LA RECETA MÁS COMENTADA ----------
 app.get('/api/reportes/receta-mas-comentada', (req, res) => {
@@ -527,3 +617,21 @@ app.get("/api/receta/:id", (req, res) => {
     });
   });
 });
+
+// ---------- RUTA PARA OBTENER ESTADOS ----------
+app.get("/api/estados", (req, res) => {
+  db.query("SELECT nombre_estado FROM Estados ORDER BY nombre_estado ASC", (err, results) => {
+    if (err) return res.status(500).json({ message: "Error al obtener estados", err });
+    res.json(results);
+  });
+});
+
+// ---------- RUTA RAÍZ ----------
+app.get('/', (req, res) => {
+	res.send('Servidor funcionando');
+});
+
+const PORT = 3000;
+app.listen(PORT, () =>
+	console.log(`Servidor escuchando en http://localhost:${PORT}`)
+);

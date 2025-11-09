@@ -18,6 +18,7 @@ const CrearEditarReceta = () => {
     imagen: null,
   });
   const [preview, setPreview] = useState(null);
+  const [estados, setEstados] = useState([]);
   const isEditing = !!recetaId;
 
   useEffect(() => {
@@ -25,6 +26,12 @@ const CrearEditarReceta = () => {
     if (!storedUser) navigate("/"); 
     else setSessionUser(storedUser);
   }, [navigate]);
+
+  useEffect(() => {
+  axios.get("http://localhost:3000/api/estados")
+    .then(({ data }) => setEstados(data))
+    .catch(err => console.error("Error al cargar estados:", err));
+  }, []);
 
   // ======= CARGAR RECETA SI ES PARA EDITAR =======
   useEffect(() => {
@@ -38,15 +45,14 @@ const CrearEditarReceta = () => {
             descripcion: data.descripcion,
             ingredientes: data.ingredientes,
             instrucciones: data.instrucciones,
-            imagen: null, // Imagen nueva opcional
+            imagen: null, 
           });
-          setPreview(data.imagen); // Preview de la imagen actual
+          setPreview(data.imagen); 
         })
         .catch((err) => console.error(err));
     }
   }, [isEditing, recetaId]);
 
-  // ======= INPUTS =======
   const handleChange = (e) => {
     const { name, value } = e.target;
     setReceta((prev) => ({ ...prev, [name]: value }));
@@ -64,7 +70,6 @@ const CrearEditarReceta = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación
     if (!receta.titulo || !receta.estado || !receta.descripcion || !receta.ingredientes || !receta.instrucciones) {
       Swal.fire({
         title: "Campos incompletos",
@@ -76,6 +81,7 @@ const CrearEditarReceta = () => {
     }
 
     const formData = new FormData();
+    formData.append("id_usuario", sessionUser.id); 
     formData.append("titulo", receta.titulo);
     formData.append("estado", receta.estado);
     formData.append("descripcion", receta.descripcion);
@@ -107,7 +113,7 @@ const CrearEditarReceta = () => {
             confirmButtonColor: "#da2627",
             timer: 2000,
             showConfirmButton: false,
-          }).then(() => navigate("/PerfilUsuario/" + sessionUser.username));
+          }).then(() => navigate("/usuario/" + sessionUser.username));
         } catch (err) {
           console.error(err);
           Swal.fire({
@@ -160,38 +166,33 @@ const CrearEditarReceta = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label className="section-title">Nombre del platillo</label>
+              <label className="section-title">Nombre del platillo:</label>
               <input type="text" className="form-control" name="titulo" value={receta.titulo} onChange={handleChange} required />
             </div>
 
             <div className="form-group">
-              <label className="section-title">Estado de origen</label>
+              <label className="section-title">Selecciona estado de origen:</label>
               <select className="form-control" name="estado" value={receta.estado} onChange={handleChange} required>
-                <option value="">Selecciona un estado...</option>
-                {[
-                  "Aguascalientes","Baja California","Baja California Sur","Campeche","Chiapas","Chihuahua",
-                  "Ciudad de México","Coahuila","Colima","Durango","Estado de México","Guanajuato","Guerrero",
-                  "Hidalgo","Jalisco","Michoacán","Morelos","Nayarit","Nuevo León","Oaxaca","Puebla","Querétaro",
-                  "Quintana Roo","San Luis Potosí","Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala",
-                  "Veracruz","Yucatán","Zacatecas"
-                ].map((estado) => (
-                  <option key={estado} value={estado}>{estado}</option>
+                {estados.map((e) => (
+                  <option key={e.nombre_estado} value={e.nombre_estado}>
+                    {e.nombre_estado}
+                  </option>
                 ))}
               </select>
             </div>
 
             <div className="form-group">
-              <label className="section-title">Descripción</label>
+              <label className="section-title">Descripción:</label>
               <textarea className="form-control" name="descripcion" rows="3" value={receta.descripcion} onChange={handleChange} required></textarea>
             </div>
 
             <div className="form-group">
-              <label className="section-title">Ingredientes</label>
+              <label className="section-title">Ingredientes:</label>
               <textarea className="form-control" name="ingredientes" rows="5" value={receta.ingredientes} onChange={handleChange} required></textarea>
             </div>
 
             <div className="form-group">
-              <label className="section-title">Instrucciones</label>
+              <label className="section-title">Instrucciones:</label>
               <textarea className="form-control" name="instrucciones" rows="7" value={receta.instrucciones} onChange={handleChange} required></textarea>
             </div>
 

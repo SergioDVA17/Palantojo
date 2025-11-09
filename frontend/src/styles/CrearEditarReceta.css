@@ -22,7 +22,6 @@
 }
 
 .image-upload {
-  border: 2px dashed #da2627;
   border-radius: 10px;
   padding: 25px;
   text-align: center;
@@ -64,6 +63,8 @@ textarea.form-control {
   cursor: pointer;
   border: none;
   margin: 0 2px 0 2px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  
 }
 
 .btn-publish-action {
@@ -73,11 +74,25 @@ textarea.form-control {
   padding: 8px 15px;
 }
 
+.btn-publish-action,
+.btn-cancel {
+  border: 2px solid transparent;
+}
+
+.btn-publish-action:hover,
+.btn-cancel:hover {
+  border: 2px solid transparent;
+}
+
 .btn-publish-action:hover {
   background-color: #c71b1b;
-  font-weight: bold;
   color: white;
   text-decoration: none;
+}
+
+input:invalid, select:invalid, textarea:invalid {
+  border-color: #e2e2e2 !important; 
+  box-shadow: none !important;
 }
 
 .btn-cancel {
@@ -91,7 +106,6 @@ textarea.form-control {
   background-color: #000000;
   color: white;
   text-decoration: none;
-  font-weight: bold;
 }
 
 footer {
