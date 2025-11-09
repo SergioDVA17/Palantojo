@@ -166,11 +166,15 @@ const PaginaPrincipal = () => {
               <div className="row">
                 {busquedaRecetas.length > 0 ? (
                   busquedaRecetas.map((r) => (
-                    <div key={r.id_receta || r.id} className="col-md-4 mb-3">
-                      <CardRecetaBusqueda receta={r} />
-                    </div>
-                  ))
-                ) : (
+                  <div key={r.id_receta || r.id} className="col-md-4 mb-3">
+                    <CardRecetaBusqueda
+                      receta={r}
+                      onRecetaEliminada={(idEliminada) =>
+                        setBusquedaRecetas((prev) => prev.filter((rec) => rec.id_receta !== idEliminada))
+                      }
+                    />
+                  </div>
+                ))) : (
                   <p className="text-muted">No se encontraron recetas.</p>
                 )}
               </div>

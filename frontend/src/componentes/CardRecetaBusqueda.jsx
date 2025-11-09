@@ -42,77 +42,80 @@ const CardRecetaBusqueda = ({ receta, onRecetaEliminada }) => {
       }
     });
   };
-
-  return (
-    <div className="card card-receta shadow-sm">
-      <img
+    
+    return (
+    <div className="card-receta-busqueda">
+        {/* Imagen */}
+        <img
         src={`http://localhost:3000${receta.url_imagen || receta.imagen}`}
         alt={receta.nombre_platillo || receta.titulo}
         className="card-img-top"
-      />
+        />
 
-      <div className="card-body">
-        <h5 className="card-title fw-bold">
-          {receta.nombre_platillo || receta.titulo}
-        </h5>
-        <p className="card-text text-muted">
-          {receta.descripcion || "Una receta deliciosa de PalAntojo."}
+        {/* Contenido */}
+        <div className="card-body">
+        <h4 className="card-titulo">{receta.nombre_platillo || receta.titulo}</h4>
+
+        <p className="card-descripcion">
+            {receta.descripcion || "Una receta deliciosa de PalAntojo."}
         </p>
 
         <small className="text-muted d-block mb-2">
-          Estado: {receta.nombre_estado || receta.estado || "Sin estado"}
+            Estado: {receta.nombre_estado || receta.estado || "Sin estado"}
         </small>
 
-        <div className="d-flex align-items-center mb-2">
-          <img
+        <div className="card-stats">
+            <div className="stat-item">
+            <i className="bi bi-star-fill"></i>
+            <span>{parseFloat(receta.promedio_calificacion || 0).toFixed(1)}</span>
+            </div>
+        </div>
+
+        <div className="autor-info-busqueda">
+            <img
             src={`http://localhost:3000${receta.autor_foto}`}
             alt={receta.autor}
-            className="rounded-circle me-2"
-            style={{ width: "30px", height: "30px" }}
-          />
-          <span
-            className="text-danger fw-semibold"
-            style={{ cursor: "pointer" }}
+            className="autor-foto-busqueda"
+            />
+            <span
+            className="autor-nombre"
             onClick={() => navigate(`/usuario/${receta.autor}`)}
-          >
+            >
             @{receta.autor}
-          </span>
+            </span>
         </div>
 
-        <div className="mb-2">
-          <i className="bi bi-star-fill text-warning"></i>{" "}
-          <span>{parseFloat(receta.promedio_calificacion || 0).toFixed(1)}</span>
-        </div>
+        <hr />
 
         <div
-          className={`botones-receta-busqueda ${
+            className={`botones-receta-busqueda ${
             esAutor ? "autor" : "no-autor"
-          }`}
+            }`}
         >
-          <button
+            <button
             className="btn-detalles"
             onClick={() => navigate(`/VerDetalles/${receta.id_receta}`)}
-          >
-            Ver más detalles
-          </button>
+            >
+            Ver más
+            </button>
 
-          {esAutor && (
+            {esAutor && (
             <>
-              <button
+                <button
                 className="btn-editarReceta"
                 onClick={() => navigate(`/CrearEditarReceta/${receta.id_receta}`)}
-              >
+                >
                 Editar
-              </button>
-              <button className="btn-eliminarReceta" onClick={handleEliminar}>
+                </button>
+                <button className="btn-eliminarReceta" onClick={handleEliminar}>
                 Eliminar
-              </button>
+                </button>
             </>
-          )}
+            )}
         </div>
-      </div>
+        </div>
     </div>
-  );
+    );
 };
 
 export default CardRecetaBusqueda;
