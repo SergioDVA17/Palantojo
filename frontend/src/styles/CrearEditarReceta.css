@@ -130,3 +130,8 @@ select.form-control {
   font-size: 16px; 
   color: #333;         
 }
+
+.previewR {
+  width: 400px;
+  height: 200px;
+}

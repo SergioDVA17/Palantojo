@@ -57,13 +57,9 @@ const PerfilUsuario = () => {
       const { data: topRecipe } = await axios.get(`http://localhost:3000/api/user/${data.id}/top-recipe`);
       setRecetaDestacada(topRecipe);
 
-      setRecetas([
-        { id: 1, titulo: "Sopes", descripcion: "Deliciosos sopes", imagen: "/Imagenes/Sopes.jpg" },
-        { id: 2, titulo: "Tacos", descripcion: "Tacos al pastor", imagen: "/Imagenes/Tacos.jpg" },
-      ]);
-      setGuardadas([
-        { id: 3, titulo: "Mole con arroz", descripcion: "Delicioso mole", imagen: "/Imagenes/MoleConArroz.jpg", autor: "Luisa" },
-      ]);
+      const { data: recetasData } = await axios.get(`http://localhost:3000/api/recetas/usuario/${data.id}`);
+      setRecetas(recetasData);
+      setGuardadas([]);
     } catch (err) {
       console.error(err);
       Swal.fire({
@@ -71,6 +67,14 @@ const PerfilUsuario = () => {
         title: "Hubo un error...",
         text: "No se pudo cargar el usuario",
       });
+    }
+  };
+
+  const handleRecetaEliminada = (idReceta) => {
+    setRecetas((prev) => prev.filter((r) => r.id !== idReceta));
+
+    if (recetaDestacada && recetaDestacada.id === idReceta) {
+      setRecetaDestacada(null); 
     }
   };
 
@@ -131,6 +135,7 @@ const PerfilUsuario = () => {
                 receta={recetaDestacada}
                 mostrarAutor={false}
                 esPropia={esPropio}
+                onRecetaEliminada={handleRecetaEliminada}
               />
             </div>
           ) : (
@@ -145,19 +150,40 @@ const PerfilUsuario = () => {
 
         <h3 className="titulo-seccion">Recetas publicadas</h3>
         <hr />
+        {recetas.length > 0 ? (
         <div className="recetas-grid">
           {recetas.map((r) => (
-            <CardReceta key={r.id} receta={r} mostrarAutor esPropia={esPropio} />
+            <CardReceta
+              key={r.id}
+              receta={r}
+              mostrarAutor
+              esPropia={esPropio}
+              onRecetaEliminada={handleRecetaEliminada}
+            />
           ))}
         </div>
+        ) : (
+          <p className="text-muted text-center">Aún no tienes recetas publicadas.</p>
+        )}
 
         <h3 className="titulo-seccion">Recetas guardadas</h3>
         <hr />
+        {guardadas.length > 0 ? (
         <div className="recetas-grid">
           {guardadas.map((r) => (
-            <CardReceta key={r.id} receta={r} mostrarAutor />
+            <CardReceta
+              key={r.id}
+              receta={r}
+              mostrarAutor
+              esPropia={esPropio}
+              onRecetaEliminada={handleRecetaEliminada}
+            />
           ))}
         </div>
+        ) : (
+          <p className="text-muted text-center">Aún no tienes recetas guardadas.</p>
+        )}
+
       </main>
 
       <footer className="text-center mt-4">

@@ -154,7 +154,7 @@ const CrearEditarReceta = () => {
           {/* Imagen */}
           <div className="image-upload" onClick={() => document.getElementById("fileInput").click()}>
             {preview ? (
-              <img src={preview} alt="preview" style={{ maxHeight: "200px", marginBottom: "10px" }} />
+              <img src={preview} alt="preview" className="previewR" style={{ maxHeight: "200px", marginBottom: "10px" }} />
             ) : (
               <>
                 <i className="bi bi-cloud-arrow-up upload-icon"></i>

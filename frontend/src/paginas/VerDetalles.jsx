@@ -29,7 +29,7 @@ const VerDetalles = () => {
   useEffect(() => {
     const fetchReceta = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/receta/${id}`);
+        const res = await axios.get(`http://localhost:3000/api/recetas/${id}`);
         setReceta(res.data);
       } catch (err) {
         console.error(err);

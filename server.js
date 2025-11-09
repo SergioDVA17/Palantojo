@@ -324,6 +324,78 @@ app.get("/api/recetas/:id", (req, res) => {
   });
 });
 
+// Recetas de un usuario
+app.get('/api/recetas/usuario/:id', (req, res) => {
+  const { id } = req.params;
+  const query = `
+    SELECT 
+      r.id_receta,
+      r.nombre_platillo,
+      r.descripcion,
+      e.nombre_estado,
+      i.url_imagen,
+      AVG(c.calificacion) AS promedio_calificacion
+    FROM Recetas r
+    LEFT JOIN Estados e ON r.id_estado = e.id_estado
+    LEFT JOIN Imagenes i ON r.id_receta = i.id_receta
+    LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
+    WHERE r.id_usuario = ?
+    GROUP BY r.id_receta
+    ORDER BY r.fecha_publicacion DESC;
+  `;
+
+  db.query(query, [id], (err, results) => {
+    if (err)
+      return res.status(500).json({ message: "Error al obtener recetas del usuario", err });
+
+    const recetas = results.map(r => ({
+      id: r.id_receta,
+      titulo: r.nombre_platillo,
+      descripcion: r.descripcion,
+      estado: r.nombre_estado || "Sin estado",
+      imagen: r.url_imagen || "/Imagenes/default.png",
+      promedioCalificacion: parseFloat(r.promedio_calificacion) || 0,
+    }));
+
+    res.json(recetas);
+  });
+});
+
+app.delete("/api/recetas/:id", (req, res) => {
+  const { id } = req.params;
+
+  const queries = [
+    { table: "Comentarios", column: "id_receta" },
+    { table: "Calificaciones", column: "id_receta" },
+    { table: "Imagenes", column: "id_receta" },
+  ];
+
+  const eliminarAsociados = (index = 0) => {
+    if (index >= queries.length) {
+      db.query("DELETE FROM Recetas WHERE id_receta = ?", [id], (err, result) => {
+        if (err)
+          return res.status(500).json({ message: "Error al eliminar receta", err });
+
+        if (result.affectedRows === 0)
+          return res.status(404).json({ message: "Receta no encontrada" });
+
+        return res.json({ message: "Receta eliminada correctamente" });
+      });
+      return;
+    }
+
+    const { table, column } = queries[index];
+    db.query(`DELETE FROM ${table} WHERE ${column} = ?`, [id], (err) => {
+      if (err) console.error(`Error al eliminar de ${table}:`, err);
+      eliminarAsociados(index + 1);
+    });
+  };
+
+  eliminarAsociados();
+});
+
+//----------------------------
+
 // Busqueda
 app.get('/api/recetas/search', (req, res) => {
   const { q } = req.query;
@@ -349,36 +421,6 @@ app.get('/api/recetas/search', (req, res) => {
   db.query(query, [term, term, term], (err, results) => {
     if (err) return res.status(500).json({ message: "Error en la búsqueda", err });
     res.json(results);
-  });
-});
-
-// Recetas de un usuario
-app.get('/api/recetas/usuario/:id', (req, res) => {
-  const { id } = req.params;
-  const query = `
-    SELECT 
-      r.id_receta, r.nombre_platillo, r.descripcion, e.nombre_estado,
-      i.url_imagen, AVG(c.calificacion) AS promedio_calificacion
-    FROM Recetas r
-    LEFT JOIN Estados e ON r.id_estado = e.id_estado
-    LEFT JOIN Imagenes i ON r.id_receta = i.id_receta
-    LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
-    WHERE r.id_usuario = ?
-    GROUP BY r.id_receta
-    ORDER BY r.fecha_publicacion DESC;
-  `;
-  db.query(query, [id], (err, results) => {
-    if (err) return res.status(500).json({ message: "Error al obtener recetas del usuario", err });
-    res.json(results);
-  });
-});
-
-app.delete('/api/recetas/:id', (req, res) => {
-  const { id } = req.params;
-  db.query('DELETE FROM Recetas WHERE id_receta = ?', [id], (err, result) => {
-    if (err) return res.status(500).json({ message: "Error al eliminar receta", err });
-    if (result.affectedRows === 0) return res.status(404).json({ message: "Receta no encontrada" });
-    res.json({ message: "Receta eliminada correctamente" });
   });
 });
 
@@ -596,48 +638,6 @@ app.get('/api/reportes/top-usuarios-recetas', (req, res) => {
 
 		res.json(usuarios);
 	});
-});
-
-// Receta por ID
-app.get("/api/receta/:id", (req, res) => {
-  const { id } = req.params;
-
-  const query = `
-    SELECT 
-      r.id_receta,
-      r.nombre_platillo,
-      r.descripcion,
-      r.id_estado,
-      e.nombre_estado,
-      u.username AS autor,
-      u.fotoPerfil AS autor_foto,
-      i.url_imagen,
-      AVG(c.calificacion) AS promedio_calificacion
-    FROM Recetas r
-    JOIN users u ON r.id_usuario = u.id
-    LEFT JOIN Imagenes i ON r.id_receta = i.id_receta
-    LEFT JOIN Estados e ON r.id_estado = e.id_estado
-    LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
-    WHERE r.id_receta = ?
-    GROUP BY r.id_receta, r.nombre_platillo, r.descripcion, r.id_estado, e.nombre_estado, u.username, u.fotoPerfil, i.url_imagen
-  `;
-
-  db.query(query, [id], (err, results) => {
-    if (err) return res.status(500).json({ message: "Error en la base de datos", err });
-    if (results.length === 0) return res.status(404).json({ message: "Receta no encontrada" });
-
-    const r = results[0];
-    res.json({
-      id: r.id_receta,
-      titulo: r.nombre_platillo,
-      descripcion: r.descripcion,
-      estado: r.nombre_estado || "Sin estado",
-      autor: r.autor,
-      autor_foto: r.autor_foto,
-      imagen: r.url_imagen || "/Imagenes/default.png",
-      promedioCalificacion: parseFloat(r.promedio_calificacion) || 0
-    });
-  });
 });
 
 // ---------- RUTA RAÍZ ----------
