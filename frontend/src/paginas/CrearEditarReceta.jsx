@@ -40,16 +40,16 @@ const CrearEditarReceta = () => {
         .get(`http://localhost:3000/api/recetas/${recetaId}`)
         .then(({ data }) => {
           setReceta({
-            titulo: data.titulo,
-            estado: data.estado,
-            descripcion: data.descripcion,
-            ingredientes: data.ingredientes,
-            instrucciones: data.instrucciones,
-            imagen: null, 
+            titulo: data.titulo || "",
+            estado: data.estado || "",
+            descripcion: data.descripcion || "",
+            ingredientes: data.ingredientes || "",
+            instrucciones: data.instrucciones || "",
+            imagen: null,
           });
-          setPreview(data.imagen); 
+          if (data.imagen) setPreview(`http://localhost:3000${data.imagen}`);
         })
-        .catch((err) => console.error(err));
+        .catch((err) => console.error("Error al cargar receta:", err));
     }
   }, [isEditing, recetaId]);
 
@@ -108,7 +108,7 @@ const CrearEditarReceta = () => {
             await axios.post("http://localhost:3000/api/recetas", formData);
           }
           Swal.fire({
-            title: `Receta ${isEditing ? "editada" : "publicada"}!`,
+            title: `Receta ${isEditing ? "editada" : "publicada"}`,
             icon: "success",
             confirmButtonColor: "#da2627",
             timer: 2000,

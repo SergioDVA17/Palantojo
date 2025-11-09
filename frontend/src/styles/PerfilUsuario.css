@@ -94,10 +94,6 @@
   border: 2px solid #da2627;
 }
 
-.card-receta:hover {
-  transform: scale(1.02);
-}
-
 .card-receta img {
   height: 180px;
   width: 100%;

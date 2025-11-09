@@ -26,8 +26,8 @@ const db = mysql.createConnection({
 });
 
 db.connect(err => {
-	if (err) console.error('❌ Error conectando a MySQL:', err);
-	else console.log('✅ Conectado a MySQL');
+	if (err) console.error('Error conectando a MySQL:', err);
+	else console.log('Conectado a MySQL');
 });
 
 const storage = multer.diskStorage({
@@ -42,11 +42,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-
-// ==========================================================
 //							USUARIOS 
-// ==========================================================
-// ---------- RUTA DE REGISTRO ----------
 app.post('/register', upload.single('fotoPerfil'), async (req, res) => {
 	const { nombres, apellidos, correo, username, password } = req.body;
 	if (!nombres || !apellidos || !correo || !username || !password) {
@@ -87,7 +83,6 @@ app.post('/register', upload.single('fotoPerfil'), async (req, res) => {
 	}
 });
 
-// ---------- RUTA DE LOGIN ----------
 app.post('/login', (req, res) => {
 	const { usuario, password } = req.body;
 	if (!usuario || !password) {
@@ -125,7 +120,6 @@ app.post('/login', (req, res) => {
 	});
 });
 
-// ---------- RUTA DE ACTUALIZAR PERFIL ----------
 app.post('/update-profile', upload.single('profile_image'), async (req, res) => {
 	const { id, nombres, apellidos, correo, username, password } = req.body;
 
@@ -169,7 +163,6 @@ app.post('/update-profile', upload.single('profile_image'), async (req, res) => 
 	}
 });
 
-// ---------- RUTA PARA ELIMINAR UN USUARIO ----------
 app.delete('/api/delete-user/:id', (req, res) => {
 	const { id } = req.params;
 	db.query('DELETE FROM users WHERE id = ?', [id], (err, result) => {
@@ -184,7 +177,7 @@ app.delete('/api/delete-user/:id', (req, res) => {
 	});
 });
 
-// ---------- RUTA PARA OBTENER TODOS LOS USUARIOS [BUSQUEDA] ----------
+// Busqueda
 app.get('/api/search/users', (req, res) => {
 	const search = req.query.q;
 	if (!search || search.trim() === '') {
@@ -202,7 +195,6 @@ app.get('/api/search/users', (req, res) => {
 	});
 });
 
-// ---------- RUTA PARA OBTENER UN USUARIO POR ID ----------
 app.get('/api/users/by-username/:username', (req, res) => {
   const { username } = req.params;
   db.query(
@@ -218,8 +210,13 @@ app.get('/api/users/by-username/:username', (req, res) => {
 
 // ==========================================================
 //							RECETAS 
-// ==========================================================
-// ---------- RUTA PARA CREAR RECETA ----------
+app.get("/api/estados", (req, res) => {
+  db.query("SELECT nombre_estado FROM Estados ORDER BY nombre_estado ASC", (err, results) => {
+    if (err) return res.status(500).json({ message: "Error al obtener estados", err });
+    res.json(results);
+  });
+});
+
 app.post("/api/recetas", upload.single("imagen"), (req, res) => {
   const { titulo, descripcion, ingredientes, instrucciones, estado, id_usuario } = req.body;
 
@@ -262,19 +259,19 @@ app.post("/api/recetas", upload.single("imagen"), (req, res) => {
   );
 });
 
-// ---------- RUTA PARA ACTUALIZAR RECETA ----------
-app.post("/api/recetas/:id", upload.single("imagen"), (req, res) => {
+// Actualizar receta
+app.put("/api/recetas/:id", upload.single("imagen"), (req, res) => {
   const { id } = req.params;
-  const { nombre_platillo, descripcion, ingredientes, instrucciones, estado } = req.body;
+  const { titulo, descripcion, ingredientes, instrucciones, estado } = req.body;
 
-  if (!nombre_platillo && !descripcion && !ingredientes && !instrucciones && !estado && !req.file) {
+  if (!titulo && !descripcion && !ingredientes && !instrucciones && !estado && !req.file) {
     return res.status(400).json({ message: "No hay cambios para actualizar" });
   }
 
   const updates = [];
   const values = [];
 
-  if (nombre_platillo) { updates.push("nombre_platillo = ?"); values.push(nombre_platillo); }
+  if (titulo) { updates.push("nombre_platillo = ?"); values.push(titulo); }
   if (descripcion) { updates.push("descripcion = ?"); values.push(descripcion); }
   if (ingredientes) { updates.push("ingredientes = ?"); values.push(ingredientes); }
   if (instrucciones) { updates.push("instrucciones = ?"); values.push(instrucciones); }
@@ -297,11 +294,37 @@ app.post("/api/recetas/:id", upload.single("imagen"), (req, res) => {
       );
     }
 
-    res.json({ message: "Receta actualizada correctamente" });
+    res.json({ message: "Se guardaron los cambios de la receta" });
   });
 });
 
-// ---------- RUTA PARA BUSCAR RECETAS POR NOMBRE, ESTADO O USUARIO ----------
+// Receta por ID
+app.get("/api/recetas/:id", (req, res) => {
+  const { id } = req.params;
+
+  const query = `
+    SELECT 
+      r.id_receta,
+      r.nombre_platillo AS titulo,
+      r.descripcion,
+      r.ingredientes,
+      r.instrucciones,
+      e.nombre_estado AS estado,
+      i.url_imagen AS imagen
+    FROM Recetas r
+    JOIN Estados e ON r.id_estado = e.id_estado
+    LEFT JOIN Imagenes i ON r.id_receta = i.id_receta
+    WHERE r.id_receta = ?
+  `;
+
+  db.query(query, [id], (err, results) => {
+    if (err) return res.status(500).json({ message: "Error al obtener receta", err });
+    if (results.length === 0) return res.status(404).json({ message: "Receta no encontrada" });
+    res.json(results[0]);
+  });
+});
+
+// Busqueda
 app.get('/api/recetas/search', (req, res) => {
   const { q } = req.query;
   if (!q || q.trim() === '') {
@@ -329,7 +352,7 @@ app.get('/api/recetas/search', (req, res) => {
   });
 });
 
-// ---------- RUTA PARA OBTENER RECETAS DE UN USUARIO ----------
+// Recetas de un usuario
 app.get('/api/recetas/usuario/:id', (req, res) => {
   const { id } = req.params;
   const query = `
@@ -350,7 +373,6 @@ app.get('/api/recetas/usuario/:id', (req, res) => {
   });
 });
 
-// ---------- RUTA PARA ELIMINAR UNA RECETA ----------
 app.delete('/api/recetas/:id', (req, res) => {
   const { id } = req.params;
   db.query('DELETE FROM Recetas WHERE id_receta = ?', [id], (err, result) => {
@@ -360,7 +382,7 @@ app.delete('/api/recetas/:id', (req, res) => {
   });
 });
 
-// ---------- RUTA PARA OBTENER TODAS LAS RECETAS ----------
+// Todas las recetas
 app.get('/api/recetas', (req, res) => {
   const query = `
     SELECT 
@@ -391,7 +413,7 @@ app.get('/api/recetas', (req, res) => {
   });
 });
 
-// ---------- RUTA PARA OBTENER LA RECETA MEJOR CALIFICADA DE UN USUARIO (RECETA DESTACADA) ----------
+// Mejr calificada
 app.get('/api/user/:id/top-recipe', (req, res) => {
   const { id } = req.params;
 
@@ -443,7 +465,7 @@ app.get('/api/user/:id/top-recipe', (req, res) => {
   });
 });
 
-// ---------- RUTA PARA OBTENER EL RATING PROMEDIO DE UN USUARIO ----------
+// Rating promedio de un usuario 
 app.get('/api/user/:id/rating', (req, res) => {
 	const { id } = req.params;
 
@@ -482,7 +504,7 @@ app.get('/api/user/:id/rating', (req, res) => {
 	});
 });
 
-// ---------- RUTA PARA OBTENER LA RECETA MÁS COMENTADA ----------
+// Receta más comentada
 app.get('/api/reportes/receta-mas-comentada', (req, res) => {
 	const query = `
     SELECT 
@@ -533,7 +555,7 @@ app.get('/api/reportes/receta-mas-comentada', (req, res) => {
 	});
 });
 
-// ---------- RUTA PARA OBTENER TOP 3 USUARIOS CON MÁS RECETAS ----------
+// Top 3 usuarios con más recetas
 app.get('/api/reportes/top-usuarios-recetas', (req, res) => {
 	const query = `
     SELECT 
@@ -576,7 +598,7 @@ app.get('/api/reportes/top-usuarios-recetas', (req, res) => {
 	});
 });
 
-// ---------- RUTA PARA OBTENER UNA RECETA POR ID ----------
+// Receta por ID
 app.get("/api/receta/:id", (req, res) => {
   const { id } = req.params;
 
@@ -615,14 +637,6 @@ app.get("/api/receta/:id", (req, res) => {
       imagen: r.url_imagen || "/Imagenes/default.png",
       promedioCalificacion: parseFloat(r.promedio_calificacion) || 0
     });
-  });
-});
-
-// ---------- RUTA PARA OBTENER ESTADOS ----------
-app.get("/api/estados", (req, res) => {
-  db.query("SELECT nombre_estado FROM Estados ORDER BY nombre_estado ASC", (err, results) => {
-    if (err) return res.status(500).json({ message: "Error al obtener estados", err });
-    res.json(results);
   });
 });
 
