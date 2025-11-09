@@ -151,35 +151,75 @@ const PerfilUsuario = () => {
         <h3 className="titulo-seccion">Recetas publicadas</h3>
         <hr />
         {recetas.length > 0 ? (
-        <div className="recetas-grid">
-          {recetas.map((r) => (
-            <CardReceta
-              key={r.id}
-              receta={r}
-              mostrarAutor
-              esPropia={esPropio}
-              onRecetaEliminada={handleRecetaEliminada}
-            />
-          ))}
-        </div>
+          <div className="recetas-carousel-container">
+            <button
+              className="carousel-btn left"
+              onClick={() =>
+                document.getElementById("recetas-carousel").scrollBy({ left: -400, behavior: "smooth" })
+              }
+            >
+              <i className="bi bi-chevron-left"></i>
+            </button>
+
+            <div id="recetas-carousel" className="recetas-carousel">
+              {recetas.map((r) => (
+                <CardReceta
+                  key={r.id}
+                  receta={r}
+                  mostrarAutor
+                  esPropia={esPropio}
+                  onRecetaEliminada={handleRecetaEliminada}
+                />
+              ))}
+            </div>
+
+            <button
+              className="carousel-btn right"
+              onClick={() =>
+                document.getElementById("recetas-carousel").scrollBy({ left: 400, behavior: "smooth" })
+              }
+            >
+              <i className="bi bi-chevron-right"></i>
+            </button>
+          </div>
         ) : (
           <p className="text-muted text-center">Aún no tienes recetas publicadas.</p>
         )}
 
-        <h3 className="titulo-seccion">Recetas guardadas</h3>
+        <h3 className="titulo-seccion mt-4">Recetas guardadas</h3>
         <hr />
         {guardadas.length > 0 ? (
-        <div className="recetas-grid">
-          {guardadas.map((r) => (
-            <CardReceta
-              key={r.id}
-              receta={r}
-              mostrarAutor
-              esPropia={esPropio}
-              onRecetaEliminada={handleRecetaEliminada}
-            />
-          ))}
-        </div>
+          <div className="recetas-carousel-container">
+            <button
+              className="carousel-btn left"
+              onClick={() =>
+                document.getElementById("guardadas-carousel").scrollBy({ left: -400, behavior: "smooth" })
+              }
+            >
+              <i className="bi bi-chevron-left"></i>
+            </button>
+
+            <div id="guardadas-carousel" className="recetas-carousel">
+              {guardadas.map((r) => (
+                <CardReceta
+                  key={r.id}
+                  receta={r}
+                  mostrarAutor
+                  esPropia={esPropio}
+                  onRecetaEliminada={handleRecetaEliminada}
+                />
+              ))}
+            </div>
+
+            <button
+              className="carousel-btn right"
+              onClick={() =>
+                document.getElementById("guardadas-carousel").scrollBy({ left: 400, behavior: "smooth" })
+              }
+            >
+              <i className="bi bi-chevron-right"></i>
+            </button>
+          </div>
         ) : (
           <p className="text-muted text-center">Aún no tienes recetas guardadas.</p>
         )}

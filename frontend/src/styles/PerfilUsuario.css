@@ -176,3 +176,56 @@
   font-weight: bold;
   color: #da2627;
 }
+
+/*CARRUSEL*/
+.recetas-carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recetas-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 1rem;
+  padding: 1rem;
+  scrollbar-width: none; 
+}
+
+.recetas-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.recetas-carousel .card-receta {
+  flex: 0 0 412px;
+  scroll-snap-align: start;
+}
+
+.carousel-btn {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.carousel-btn:hover {
+  background-color: #da2627;
+  color: white;
+}
+
+.carousel-btn.left {
+  position: absolute;
+  left: -20px;
+}
+
+.carousel-btn.right {
+  position: absolute;
+  right: -20px;
+}

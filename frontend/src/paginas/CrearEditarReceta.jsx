@@ -173,6 +173,7 @@ const CrearEditarReceta = () => {
             <div className="form-group">
               <label className="section-title">Selecciona estado de origen:</label>
               <select className="form-control" name="estado" value={receta.estado} onChange={handleChange} required>
+                <option value="">Selecciona un estado...</option>
                 {estados.map((e) => (
                   <option key={e.nombre_estado} value={e.nombre_estado}>
                     {e.nombre_estado}

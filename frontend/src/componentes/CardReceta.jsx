@@ -67,9 +67,8 @@ const CardReceta = ({ receta, mostrarAutor = false, esPropia = false, onRecetaEl
               </span>
             </small>
           )}
-          <hr />
         </div>
-
+          
         <div className="botones-receta">
           {esPropia ? (
             <>
