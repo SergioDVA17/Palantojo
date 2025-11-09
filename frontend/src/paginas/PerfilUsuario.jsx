@@ -59,7 +59,9 @@ const PerfilUsuario = () => {
 
       const { data: recetasData } = await axios.get(`http://localhost:3000/api/recetas/usuario/${data.id}`);
       setRecetas(recetasData);
-      setGuardadas([]);
+
+      const { data: guardadasData } = await axios.get(`http://localhost:3000/api/recetas-guardadas/${data.id}`);
+      setGuardadas(guardadasData);
     } catch (err) {
       console.error(err);
       Swal.fire({
@@ -220,7 +222,7 @@ const PerfilUsuario = () => {
                   key={r.id}
                   receta={r}
                   mostrarAutor
-                  esPropia={esPropio}
+                   esPropia={r.autor === sessionUser?.username}
                   onRecetaEliminada={handleRecetaEliminada}
                 />
               ))}

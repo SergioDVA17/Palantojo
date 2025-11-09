@@ -831,6 +831,7 @@ app.get("/api/recetas-guardadas/:id_usuario", (req, res) => {
     LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
     WHERE g.id_usuario = ?
     GROUP BY r.id_receta
+	ORDER BY g.fecha_guardado DESC
   `;
   db.query(sql, [id_usuario], (err, results) => {
     if (err)

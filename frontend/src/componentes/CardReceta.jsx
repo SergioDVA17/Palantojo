@@ -49,18 +49,18 @@ const CardReceta = ({ receta, mostrarAutor = false, esPropia = false, onRecetaEl
         className="card-img-top"
       />
 
-      <div className="card-body">
+      <div className="card-body d-flex flex-column justify-content-between">
         <div>
           <h5 className="card-title fw-bold">{receta.titulo}</h5>
-          <p className="card-text text-muted">
+          <p className="card-text text-muted descripcion-corta">
             <small>{receta.descripcion}</small>
           </p>
-
+          
           {mostrarAutor && !esPropia && receta.autor && (
             <small className="text-muted">
               Publicada por{" "}
               <span
-                className="enlace-autor"
+                className="enlace-autor" style={{ color: "#da2627", cursor: "pointer" }}
                 onClick={() => navigate(`/usuario/${receta.autor}`)}
               >
                 @{receta.autor}
@@ -69,7 +69,7 @@ const CardReceta = ({ receta, mostrarAutor = false, esPropia = false, onRecetaEl
           )}
         </div>
           
-        <div className="botones-receta">
+        <div className="botones-receta mt-3">
           {esPropia ? (
             <>
               <button

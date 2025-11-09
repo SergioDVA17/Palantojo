@@ -100,6 +100,17 @@
   object-fit: cover;
 }
 
+.descripcion-corta {
+  min-height: 3.6em;
+  max-height: 5em;
+  overflow-y: auto;
+}
+
+.card-receta small.text-muted {
+  display: block;
+  min-height: 1.5em; 
+}
+
 .card-receta .card-body {
   display: flex;
   flex-direction: column;

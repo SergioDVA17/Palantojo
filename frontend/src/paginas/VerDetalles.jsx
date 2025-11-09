@@ -175,7 +175,7 @@ const VerDetalles = () => {
               <h3 style={{ fontWeight: "bold" }}>{receta.titulo}</h3>
 
               <p>
-                <strong>Receta publicada por: </strong>
+                <strong>Publicada por: </strong>
                 <span
                   className="autor-link"
                   onClick={() => navigate(`/usuario/${receta.autor}`)}
