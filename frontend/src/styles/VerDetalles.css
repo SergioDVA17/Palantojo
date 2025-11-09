@@ -36,7 +36,7 @@
   background-color: #da2627;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 8px 15px;
   border-radius: 15px;
   cursor: pointer;
   margin-left: auto;
@@ -77,7 +77,7 @@
   margin-bottom: 15px;
   background: #f9f9f9;
   border-radius: 12px;
-  padding: 10px 15px;
+  padding: 8px 15px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 

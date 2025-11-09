@@ -70,11 +70,26 @@ const PerfilUsuario = () => {
     }
   };
 
-  const handleRecetaEliminada = (idReceta) => {
+  const handleRecetaEliminada = async (idReceta) => {
     setRecetas((prev) => prev.filter((r) => r.id !== idReceta));
 
     if (recetaDestacada && recetaDestacada.id === idReceta) {
       setRecetaDestacada(null); 
+    }
+
+    try {
+      const { data: ratingData } = await axios.get(
+        `http://localhost:3000/api/user/${user.id}/rating`
+      );
+
+      setUser((prev) => ({
+        ...prev,
+        rating_promedio: ratingData.rating_promedio,
+        total_recetas: ratingData.total_recetas,
+        total_calificaciones: ratingData.total_calificaciones,
+      }));
+    } catch (err) {
+      console.error("Error actualizando rating tras eliminación:", err);
     }
   };
 
