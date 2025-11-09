@@ -68,6 +68,14 @@ const PaginaPrincipal = () => {
     }
   };
 
+  const handleRecetaEliminada = async (idReceta) => {
+    if (recetaPopular && recetaPopular.id === idReceta) {
+      setRecetaPopular(null);
+      await cargarRecetaMasComentada();
+    }
+    await cargarTopChefs();
+  };
+
   return (
     <div className="pagina-principal">
 
@@ -88,13 +96,16 @@ const PaginaPrincipal = () => {
             <section className="mb-5">
               <div className="seccion-titulo-principal">
                 <h2 className="titulo-seccion-principal">LO MÁS POPULAR</h2>
-                <p className="text-muted">La receta favorita de la comunidad en PalAntojo</p>
+                <p className="text-muted">La receta más comentada de la comunidad en Palantojo</p>
                 <hr></hr>
                {recetaPopular ? (
-                <CardRecetaPopular receta={recetaPopular} />
-              ) : (
-                <p className="text-center text-muted">Buscando la receta más popular...</p>
-              )}
+                  <CardRecetaPopular
+                    receta={recetaPopular}
+                    onRecetaEliminada={handleRecetaEliminada}
+                  />
+                ) : (
+                  <p className="text-center text-muted">Buscando la receta más popular...</p>
+                )}
               
               </div>
             </section>
@@ -102,7 +113,7 @@ const PaginaPrincipal = () => {
             <section className="mb-5">
               <div className="seccion-titulo-principal">
                 <h2 className="titulo-seccion-principal">TOP CHEFS</h2>
-                <p className="text-muted">Los usuarios más activos en PalAntojo</p>
+                <p className="text-muted">Los usuarios con más recetas en PalAntojo</p>
                 <hr></hr>
 
               <div className="row">

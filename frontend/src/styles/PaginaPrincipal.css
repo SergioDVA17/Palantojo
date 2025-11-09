@@ -119,16 +119,120 @@
 
 /* RECETA MÁS POPULAR */
 .card-receta-popular {
-	background: white;
-	border-radius: 15px;
-	overflow: hidden;
-	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-	position: relative;
-	transition: transform 0.3s ease;
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  transition: transform 0.3s ease;
 }
 
 .card-receta-popular:hover {
-	transform: translateY(-5px);
+  transform: translateY(-5px);
+}
+
+.descripcion-y-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.descripcion-y-stats .card-text {
+  flex: 1;
+  margin: 0;
+  color: #555;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.stats-popular-inline {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.stats-popular-inline .stat-popular {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #da2627;
+  font-weight: bold;
+}
+
+.stats-popular-inline .stat-popular i {
+  font-size: 1.2rem;
+}
+
+.autor-info-popular {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 10px 15px;
+}
+
+.autor-foto-popular {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.botones-receta-popular {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.botones-receta-popular.no-autor .btn-detalles {
+  width: 60%;
+}
+
+.botones-receta-popular.autor .btn-detalles,
+.botones-receta-popular.autor .btn-editarReceta,
+.botones-receta-popular.autor .btn-eliminarReceta {
+  width: 30%;
+  max-width: 150px;
+}
+
+.btn-detalles,
+.btn-editarReceta,
+.btn-eliminarReceta {
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.2s;
+  font-size: 0.95rem;
+}
+
+.btn-editarReceta,
+.btn-detalles {
+  background-color: white;
+  border: 1px solid #da2627;
+  color: #da2627;
+}
+
+.btn-editarReceta:hover,
+.btn-detalles:hover {
+  background-color: #da2627;
+  color: white;
+}
+
+.btn-eliminarReceta {
+  background-color: #e8e8e8;
+  color: black;
+  border: 1px solid #e8e8e8;
+}
+
+.btn-eliminarReceta:hover {
+  background-color: #d7d7d7;
 }
 
 .badge-popular {
@@ -160,71 +264,6 @@
 	font-weight: bold;
 	font-size: 1.5rem;
 	margin-bottom: 15px;
-}
-
-.card-receta-popular .card-text {
-	color: #666;
-	font-size: 1rem;
-	line-height: 1.5;
-	margin-bottom: 20px;
-}
-
-.receta-info-popular {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin: 20px 0;
-	padding: 15px;
-	background: #f8f9fa;
-	border-radius: 10px;
-}
-
-.autor-info-popular {
-	display: flex;
-	align-items: center;
-	gap: 15px;
-}
-
-.autor-foto-popular {
-	width: 50px;
-	height: 50px;
-	border-radius: 50%;
-	object-fit: cover;
-}
-
-.stats-popular {
-	display: flex;
-	gap: 20px;
-}
-
-.stat-popular {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	text-align: center;
-}
-
-.stat-popular i {
-	color: #da2627;
-	font-size: 1.5rem;
-}
-
-.btn-ver-receta-popular {
-	display: inline-block;
-	background: white;
-	color: #da2627;
-	padding: 5px 10px;
-	border-radius: 10px;
-	text-decoration: none;
-	border: 1px solid #da2627;
-  	font-weight: bold;
-}
-
-.btn-ver-receta-popular:hover {
-	text-decoration: none;
-	color: white;
-	background-color: #d63838;
-	font-weight: bold;
 }
 
 /* TOP CHEFS */

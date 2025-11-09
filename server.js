@@ -450,8 +450,7 @@ app.delete("/api/recetas/:id", (req, res) => {
 
   eliminarAsociados();
 });
-
-// Busqueda
+ 
 app.get('/api/recetas/search', (req, res) => {
   const { q } = req.query;
   if (!q || q.trim() === '') {
@@ -562,98 +561,93 @@ app.get('/api/user/:id/top-recipe', (req, res) => {
   });
 });
 
-// Receta más comentada
+// Receta más comentada - Top Popular en la Principal
 app.get('/api/reportes/receta-mas-comentada', (req, res) => {
-	const query = `
+  const query = `
     SELECT 
       r.id_receta,
       r.nombre_platillo,
       r.descripcion,
-      u.username as autor,
-      u.fotoPerfil as autor_foto,
-      COUNT(c.id_comentario) as total_comentarios,
-      AVG(cal.calificacion) as rating_promedio,
+      u.username AS autor,
+      u.fotoPerfil AS autor_foto,
+      e.nombre_estado,
       i.url_imagen,
-      e.nombre_estado
+      -- contar comentarios con subquery independiente
+      (SELECT COUNT(*) FROM Comentarios WHERE id_receta = r.id_receta) AS total_comentarios,
+      -- calcular promedio de calificación de forma independiente
+      (SELECT AVG(calificacion) FROM Calificaciones WHERE id_receta = r.id_receta) AS rating_promedio
     FROM Recetas r
     JOIN users u ON r.id_usuario = u.id
-    LEFT JOIN Comentarios c ON r.id_receta = c.id_receta
-    LEFT JOIN Calificaciones cal ON r.id_receta = cal.id_receta
     LEFT JOIN Imagenes i ON r.id_receta = i.id_receta
     LEFT JOIN Estados e ON r.id_estado = e.id_estado
-    GROUP BY r.id_receta, u.username, u.fotoPerfil, i.url_imagen, e.nombre_estado
     ORDER BY total_comentarios DESC
-    LIMIT 1
+    LIMIT 1;
   `;
 
-	db.query(query, (err, results) => {
-		if (err) {
-			console.error('Error al obtener receta más comentada:', err);
-			return res.status(500).json({ message: 'Error en la base de datos', err });
-		}
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error al obtener receta más comentada:', err);
+      return res.status(500).json({ message: 'Error en la base de datos', err });
+    }
 
-		if (results.length === 0) {
-			return res.json(null);
-		}
+    if (results.length === 0) return res.json(null);
 
-		const row = results[0];
-		const receta = {
-			id: row.id_receta,
-			titulo: row.nombre_platillo,
-			descripcion: row.descripcion,
-			autor: row.autor,
-			autor_foto: row.autor_foto,
-			estado: row.nombre_estado,
-			imagen: row.url_imagen || '/Imagenes/default.png',
-			total_comentarios: row.total_comentarios,
-			rating_promedio: parseFloat(row.rating_promedio) || 0
-		};
-
-		res.json(receta);
-	});
+    const r = results[0];
+    res.json({
+      id: r.id_receta,
+      titulo: r.nombre_platillo,
+      descripcion: r.descripcion,
+      autor: r.autor,
+      autor_foto: r.autor_foto,
+      estado: r.nombre_estado,
+      imagen: r.url_imagen || '/Imagenes/default.png',
+      total_comentarios: r.total_comentarios,
+      rating_promedio: parseFloat(r.rating_promedio) || 0,
+    });
+  });
 });
 
 // Top 3 usuarios con más recetas
 app.get('/api/reportes/top-usuarios-recetas', (req, res) => {
-	const query = `
+  const query = `
     SELECT 
       u.id,
       u.username,
       u.nombres,
       u.apellidos,
       u.fotoPerfil,
-      COUNT(r.id_receta) as total_recetas,
-      AVG(cal.calificacion) as rating_promedio,
-      COUNT(DISTINCT c.id_comentario) as total_comentarios_recibidos
+      COUNT(DISTINCT r.id_receta) AS total_recetas,
+      ROUND(AVG(c.calificacion), 2) AS rating_promedio,
+      COUNT(DISTINCT co.id_comentario) AS total_comentarios_recibidos
     FROM users u
     LEFT JOIN Recetas r ON u.id = r.id_usuario
-    LEFT JOIN Calificaciones cal ON r.id_receta = cal.id_receta
-    LEFT JOIN Comentarios c ON r.id_receta = c.id_receta
-    GROUP BY u.id, u.username, u.nombres, u.apellidos, u.fotoPerfil
+    LEFT JOIN Calificaciones c ON r.id_receta = c.id_receta
+    LEFT JOIN Comentarios co ON r.id_receta = co.id_receta
+    GROUP BY u.id
     HAVING total_recetas > 0
-    ORDER BY total_recetas DESC
-    LIMIT 3
+    ORDER BY total_recetas DESC, rating_promedio DESC, total_comentarios_recibidos DESC
+    LIMIT 3;
   `;
 
-	db.query(query, (err, results) => {
-		if (err) {
-			console.error('Error al obtener top usuarios:', err);
-			return res.status(500).json({ message: 'Error en la base de datos', err });
-		}
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error al obtener top chefs:", err);
+      return res.status(500).json({ message: "Error en la base de datos", err });
+    }
 
-		const usuarios = results.map(row => ({
-			id: row.id,
-			username: row.username,
-			nombres: row.nombres,
-			apellidos: row.apellidos,
-			fotoPerfil: row.fotoPerfil || '/Imagenes/default.png',
-			total_recetas: row.total_recetas,
-			rating_promedio: parseFloat(row.rating_promedio) || 0,
-			total_comentarios_recibidos: row.total_comentarios_recibidos
-		}));
+    const chefs = results.map(c => ({
+      id: c.id,
+      username: c.username,
+      nombres: c.nombres,
+      apellidos: c.apellidos,
+      fotoPerfil: c.fotoPerfil,
+      total_recetas: c.total_recetas || 0,
+      rating_promedio: parseFloat(c.rating_promedio) || 0,
+      total_comentarios_recibidos: c.total_comentarios_recibidos || 0,
+    }));
 
-		res.json(usuarios);
-	});
+    res.json(chefs);
+  });
 });
 
 // ==========================================================
